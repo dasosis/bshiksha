@@ -3,8 +3,6 @@ import path from 'path';
 import pkg from 'body-parser';
 import multer from 'multer';
 import { create } from 'kubo-rpc-client';
-import { log } from 'console';
-
 
 const { urlencoded } = pkg;
 const app = express();
@@ -14,6 +12,7 @@ const directoryPath = process.cwd();
 
 app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
+app.use(express.static(path.join(directoryPath, '../build/contracts')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(directoryPath, 'src', 'index.html'));
