@@ -1,5 +1,6 @@
 document.getElementById('myForm').addEventListener('submit', async (event) => {
     event.preventDefault();
+    let responseData;
     try {
         const formData = new FormData();
 
@@ -19,17 +20,19 @@ document.getElementById('myForm').addEventListener('submit', async (event) => {
             method: 'POST',
             body: formData
         });
-        console.log(await response.json());
+        responseData = await response.json();
     } catch (error) {
         console.error(error);
     }
+
+    // console.log(responseData);
 
     //web3
     if (typeof window.ethereum !== 'undefined') {
         const web3 = new Web3(window.ethereum);
         connectAccount().then(currentAccount => {
             getContract(web3).then(({contractInstance}) => {
-                uploadPostToBlock(web3, contractInstance, currentAccount);
+                uploadPostToBlock(web3, contractInstance, currentAccount, responseData);
             }).catch(error => {
                 console.error('Error getting contract:', error);
             });
@@ -75,9 +78,12 @@ async function getContract(web3) {
     }
 }
 
-async function uploadPostToBlock(web3, contractInstance, currentAccount) {
+async function uploadPostToBlock(web3, contractInstance, currentAccount, postData) {
     try {
-        const transaction = contractInstance.methods.uploadPost('1', '1');
+        const transaction = contractInstance.methods.uploadPost(
+            postData.title,
+            postData.cid
+        );
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
         const gasPrice = await web3.eth.getGasPrice();
         const data = transaction.encodeABI();
