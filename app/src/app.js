@@ -1,17 +1,45 @@
-if (typeof window.ethereum !== 'undefined') {
-    const web3 = new Web3(window.ethereum);
-    connectAccount().then(currentAccount => {
-        getContract(web3).then(({contractInstance}) => {
-            uploadPostToBlock(web3, contractInstance, currentAccount);
-        }).catch(error => {
-            console.error('Error getting contract:', error);
+document.getElementById('myForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    try {
+        const formData = new FormData();
+
+        formData.append('title', document.getElementById('title').value);
+        formData.append('description', document.getElementById('description').value);
+
+        const fileInput = document.getElementById('file');
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            formData.append('file', file);
+        } else {
+            console.error('No file selected');
+            return;
+        }
+
+        const response = await fetch('/submit', {
+            method: 'POST',
+            body: formData
         });
-    }).catch(error => {
-        console.error('Error connecting to MetaMask:', error);
-    });
-} else {
-    console.log('MetaMask is not installed');
-}
+        console.log(await response.json());
+    } catch (error) {
+        console.error(error);
+    }
+
+    //web3
+    if (typeof window.ethereum !== 'undefined') {
+        const web3 = new Web3(window.ethereum);
+        connectAccount().then(currentAccount => {
+            getContract(web3).then(({contractInstance}) => {
+                uploadPostToBlock(web3, contractInstance, currentAccount);
+            }).catch(error => {
+                console.error('Error getting contract:', error);
+            });
+        }).catch(error => {
+            console.error('Error connecting to MetaMask:', error);
+        });
+    } else {
+        console.log('MetaMask is not installed');
+    }
+});
 
 async function connectAccount() {
     try {
@@ -40,7 +68,7 @@ async function getContract(web3) {
         console.log(address.address);
         const contractInstance = new web3.eth.Contract(abi, address.address);
         const networkId = await web3.eth.net.getId();
-        return { contractInstance, address: address.address, networkId };
+        return { contractInstance };
     } catch (error) {
         console.error('Error fetching contract artifact:', error);
         throw error;
@@ -49,7 +77,7 @@ async function getContract(web3) {
 
 async function uploadPostToBlock(web3, contractInstance, currentAccount) {
     try {
-        const transaction = contractInstance.methods.uploadPost('1','1');
+        const transaction = contractInstance.methods.uploadPost('1', '1');
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
         const gasPrice = await web3.eth.getGasPrice();
         const data = transaction.encodeABI();
@@ -57,7 +85,7 @@ async function uploadPostToBlock(web3, contractInstance, currentAccount) {
         const gasLimitHex = web3.utils.toHex(gasLimit);
         const txObject = {
             from: currentAccount,
-            to: contractInstance.options.address,   
+            to: contractInstance.options.address,
             gas: gasLimitHex,
             gasPrice: gasPrice,
             data: data
@@ -65,7 +93,7 @@ async function uploadPostToBlock(web3, contractInstance, currentAccount) {
         console.log(txObject);
         const reciept = await window.ethereum.request({
             method: 'eth_sendTransaction',
-            params: [txObject]  
+            params: [txObject]
         });
         console.log(reciept);
     } catch (error) {

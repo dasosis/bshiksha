@@ -23,10 +23,12 @@ app.post('/submit', upload.single('file'), async (req, res) => {
         const { title, description } = req.body;
         const fileData = req.file.buffer;
         const { cid } = await uploadFileToIPFS(fileData);
-        console.log(`Title: ${title}`);
-        console.log(`Description: ${description}`);
-        console.log(`File uploaded successfully! CID: ${cid}`);
-        res.send('Form submitted successfully.');
+        const responseData = {
+            title,
+            description,
+            cid : cid.toString()
+        };
+        res.json(responseData);
     } catch (err) {
         console.log(err);
     }
