@@ -38,11 +38,11 @@ contract BShiksha {
     // Array to store all posts
     Post[] public posts;
 
-    // Modifier to restrict functions to Faculties only
-    modifier onlyFaculty() {
+    // Modifier to restrict functions to faculty members only
+    modifier onlyFacultyMember() {
         require(
             userRoles[msg.sender] == Role.Faculty,
-            "Only Faculties can create posts"
+            "Only faculty members can create posts"
         );
         _;
     }
@@ -51,7 +51,7 @@ contract BShiksha {
     event PostCreated(
         uint256 id,
         string hash,
-        string descripton,
+        string description,
         uint256 tipAmount,
         address payable author
     );
@@ -60,7 +60,7 @@ contract BShiksha {
     event PostTipped(
         uint256 id,
         string hash,
-        string descripton,
+        string description,
         uint256 tipAmount,
         address payable author
     );
@@ -69,15 +69,12 @@ contract BShiksha {
     function uploadPost(
         string memory _PostHash,
         string memory _description
-    ) public {
+    ) public onlyFacultyMember {
         // Makes sure Post hash exists
         require(bytes(_PostHash).length > 0);
 
         // Makes sure Post description exists
         require(bytes(_description).length > 0);
-
-        // Makes sure uploader address exists
-        require(msg.sender != address(0x0));
 
         // Increment Post count
         PostCount++;
@@ -105,24 +102,17 @@ contract BShiksha {
     function tipPostOwner(uint256 _id) public payable {
         // Validating the Post
         require(_id > 0 && _id <= PostCount);
-        // Fetching the Post/post
-        // Post memory _Post = Posts[_id];
 
-        // Fetching address of author of Post/post
-        // address payable _author = _Post.author;
+        // Fetching the author of Post/post
         address payable _author = Posts[_id].author;
 
         // Paying the author
         _author.transfer(msg.value);
 
         // Increment the tip amount
-        // _Post.tipAmount = _Post.tipAmount + msg.value;
         Posts[_id].tipAmount += msg.value;
 
-        // Update the Post in mapping
-        // Posts[_id] = _Post;
-
-        // Trigger event when an Post is tipped
+        // Trigger event when a Post is tipped
         emit PostTipped(
             _id,
             Posts[_id].hash,

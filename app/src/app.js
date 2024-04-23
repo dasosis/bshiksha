@@ -1,8 +1,8 @@
 if (typeof window.ethereum !== 'undefined') {
     const web3 = new Web3(window.ethereum);
     connectAccount().then(currentAccount => {
-        getContract(web3).then(({ contractInstance, address, networkId }) => {
-            uploadPost(web3, contractInstance, currentAccount, address, networkId);
+        getContract(web3).then(({contractInstance}) => {
+            uploadPostToBlock(web3, contractInstance, currentAccount);
         }).catch(error => {
             console.error('Error getting contract:', error);
         });
@@ -35,7 +35,9 @@ async function getContract(web3) {
         const contractArtifact = JSON.parse(json);
         const abi = contractArtifact.abi;
         const deployment = Object.keys(contractArtifact.networks);
+        console.log(contractArtifact.networks);
         const address = contractArtifact.networks[deployment[deployment.length - 1]];
+        console.log(address.address);
         const contractInstance = new web3.eth.Contract(abi, address.address);
         const networkId = await web3.eth.net.getId();
         return { contractInstance, address: address.address, networkId };
@@ -45,30 +47,27 @@ async function getContract(web3) {
     }
 }
 
-async function uploadPost(web3, contractInstance, currentAccount, address, networkId) {
+async function uploadPostToBlock(web3, contractInstance, currentAccount) {
     try {
-        console.log('hello block');
-        const transaction = contractInstance.methods.uploadPost(
-            '1',
-            '1'
-        );
-        const gas = await transaction.estimateGas({ from: currentAccount });
+        const transaction = contractInstance.methods.uploadPost('1','1');
+        const gasLimit = await transaction.estimateGas({ from: currentAccount });
         const gasPrice = await web3.eth.getGasPrice();
         const data = transaction.encodeABI();
-        const nonce = await web3.eth.getTransactionCount(address);
-        const privateKey = 'd66c5bd20fcd0a36f215ef901ed9ff1707f6799e1539ada8a84fb98e0c16f5a7';
-        const signedTx = await web3.eth.accounts.signTransaction({
-            to: contractInstance.options.address,
-            data,
-            gas,
-            gasPrice,
-            nonce,
-            chainId: networkId
-        }, privateKey
-        );
-        
-        console.log(gas, gasPrice, data, nonce, address, networkId ,signedTx);
-        const reciept = await web3.eth.sendTransaction(signedTx.rawTransaction);
+        const nonce = await web3.eth.getTransactionCount(currentAccount);
+        const gasLimitHex = web3.utils.toHex(gasLimit);
+        const txObject = {
+            from: currentAccount,
+            to: contractInstance.options.address,   
+            gas: gasLimitHex,
+            gasPrice: gasPrice,
+            data: data
+        };
+        console.log(txObject);
+        const reciept = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [txObject]  
+        });
+        console.log(reciept);
     } catch (error) {
         console.error('Error uploading post:', error);
         throw error;
