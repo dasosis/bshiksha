@@ -121,4 +121,20 @@ contract BShiksha {
             _author
         );
     }
+    // function getPost(uint256 _postId) public view returns (
+    //     uint256 id,
+    //     string memory hash,
+    //     string memory description,
+    //     uint256 tipAmount,
+    //     address author
+    // ) {
+    //     require(_postId > 0 && _postId <= posts.length, "Invalid post ID");
+
+    //     Post memory post = posts[_postId - 1];
+    //     return (post.id, post.hash, post.description, post.tipAmount, post.author);
+    // }
+    function getPost(uint256 postId) public view returns (uint256 id, string memory hash, string memory description, uint256 tipAmount, address payable author) {
+        Post memory post = Posts[postId];
+        return (post.id, post.hash, post.description, post.tipAmount, post.author);
+    }
 }
