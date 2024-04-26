@@ -29,20 +29,57 @@ document.getElementById('myForm').addEventListener('submit', async (event) => {
 
     //web3
     if (typeof window.ethereum !== 'undefined') {
+        
         const web3 = new Web3(window.ethereum);
-        connectAccount().then(currentAccount => {
-            getContract(web3).then(({contractInstance}) => {
-                uploadPostToBlock(web3, contractInstance, currentAccount, responseData);
-            }).catch(error => {
-                console.error('Error getting contract:', error);
-            });
-        }).catch(error => {
-            console.error('Error connecting to MetaMask:', error);
-        });
+        try {
+            const currentAccount = await connectAccount();
+            const {contractInstance} = await getContract(web3)
+            const TxReciept = await uploadPostToBlock(web3, contractInstance, currentAccount, responseData);
+            const {postData} = await getPostFromBlock(contractInstance);
+        } catch (error) {
+            console.log(error);
+        }
     } else {
         console.log('MetaMask is not installed');
     }
 });
+
+async function getPostFromBlock(contractInstance) {
+    try {
+        const postId = '1';
+        const transaction = contractInstance.methods.getPost(
+            postId
+        );
+        const postData = await transaction.call();
+        console.log(postData);
+        return postData;
+    } catch (error) {
+        console.error('Error uploading post:', error);
+        throw error;
+    }
+}
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     const checkPostsBtn = document.getElementById('check-posts-btn');
+//     const postsList = document.getElementById('posts-list');
+//     checkPostsBtn.addEventListener('click', async function () {
+//         const count = await getPostCount();
+//     });
+//     // Function to retrieve posts
+//     async function getPosts() {
+//         try {
+//             console.log('check');
+//             const count = getPostCount();
+//         }
+//         catch (error) {
+//             console.error('Error retrieving posts:', error);
+//         }
+//     }
+// });
+
+// async function getPostCount() {
+    
+// }
 
 async function connectAccount() {
     try {
@@ -58,7 +95,7 @@ async function connectAccount() {
 
 async function getContract(web3) {
     try {
-        const response = await fetch('http://localhost:3000/BShiksha.json');
+        const response = await fetch('/BShiksha.json');
         if (!response.ok) {
             throw new Error('Failed to fetch contract artifact');
         }
@@ -80,8 +117,9 @@ async function getContract(web3) {
 
 async function uploadPostToBlock(web3, contractInstance, currentAccount, postData) {
     try {
+        const tempPostData = '1';
         const transaction = contractInstance.methods.uploadPost(
-            postData.title,
+            tempPostData,
             postData.cid
         );
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
@@ -97,11 +135,14 @@ async function uploadPostToBlock(web3, contractInstance, currentAccount, postDat
             data: data
         };
         console.log(txObject);
-        const reciept = await window.ethereum.request({
+        const TxHash = await window.ethereum.request({
             method: 'eth_sendTransaction',
             params: [txObject]
         });
-        console.log(reciept);
+        // console.log(TxHash);
+        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
+        console.log(TxReciept);
+        return(TxReciept);
     } catch (error) {
         console.error('Error uploading post:', error);
         throw error;
