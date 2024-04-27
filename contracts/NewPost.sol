@@ -32,7 +32,7 @@ contract BShiksha {
         string hash;
         string description;
         uint256 tipAmount;
-        uint256 minViewCost;
+        uint256 viewCost;
         address payable author;
     }
 
@@ -54,7 +54,7 @@ contract BShiksha {
         string hash,
         string description,
         uint256 tipAmount,
-        uint256 minViewCost,
+        uint256 viewCost,
         address payable author
     );
 
@@ -64,6 +64,16 @@ contract BShiksha {
         string hash,
         string description,
         uint256 tipAmount,
+        uint256 viewCost,
+        address payable author
+    );
+
+    event PostViewed(
+        uint256 id,
+        string hash,
+        string description,
+        uint256 tipAmount,
+        uint256 viewCost,
         address payable author
     );
 
@@ -71,7 +81,7 @@ contract BShiksha {
     function uploadPost (
         string memory _PostHash,
         string memory _description,
-        uint256 _minViewCost
+        uint256 _viewCost
     ) public onlyFacultyMember returns (uint256) {
         // Makes sure Post hash exists
         require(bytes(_PostHash).length > 0);
@@ -79,8 +89,12 @@ contract BShiksha {
         // Makes sure Post description exists
         require(bytes(_description).length > 0);
 
+        // uint256 value = 18 - _exp;
+        // _viewCost = (_viewCost * 1e18) / value;
+
         // Make sure minViewCost is valid
-        require(_minViewCost >=10000000 gwei && _minViewCost <= 1000000000 gwei, "Payment amount must be between 0000000 GWEI and 1000000000 GWEI");
+        // require(_minViewCost >=10000000 gwei && _minViewCost <= 1000000000 gwei, "Payment amount must be between 0000000 GWEI and 1000000000 GWEI");
+        require(_viewCost  >= 30000000000000 && _viewCost  <= 70000000000000 , "Maximum viewing cost must be between 0.03 ETH and 0.07 ETH");
 
         // Increment Post count
         PostCount++;
@@ -90,8 +104,8 @@ contract BShiksha {
             PostCount,
             _PostHash,
             _description,
-            _minViewCost,
             0,
+            _viewCost,
             payable(msg.sender)
         );
 
@@ -101,8 +115,8 @@ contract BShiksha {
             PostCount,
             _PostHash,
             _description,
-            _minViewCost,
             0,
+            _viewCost,
             payable(msg.sender)
         );
 
@@ -129,28 +143,37 @@ contract BShiksha {
             Posts[_id].hash,
             Posts[_id].description,
             Posts[_id].tipAmount,
+            Posts[_id].viewCost,
             _author
         );
     }
 
-    function getPost(uint256 postId) public view returns (uint256 id, string memory hash, string memory description, uint256 minViewCost, uint256 tipAmount, address payable author) {
+    function getPost(uint256 postId) public view returns (uint256 id, string memory hash, string memory description, uint256 tipAmount, uint256 viewCost, address payable author) {
         Post memory post = Posts[postId];
-        return (post.id, post.hash, post.description, post.minViewCost, post.tipAmount, post.author);
+        return (post.id, post.hash, post.description, post.tipAmount, post.viewCost, post.author);
     }
 
-    mapping(uint256 => mapping(address => bool)) public hasPaid;
+    function viewPost(uint256 _postId) public payable {
+        // Validating the Post
+        require(_postId > 0 && _postId <= PostCount);
 
-    function viewPost(uint256 postId) public payable {
-        require(!hasPaid[postId][msg.sender], "Already paid to view post");
-        require(msg.value == Posts[postId].minViewCost, "Incorrect payment amount");
+        // Fetching the post
+        Post memory post = Posts[_postId];
 
-        // Process payment
-        payable(address(this)).transfer(msg.value);
-        hasPaid[postId][msg.sender] = true;
+        // Ensuring payment is enough to view the post
+        require(msg.value >= post.viewCost, "Insufficient payment to view the post");
+
+        // Paying the author
+        post.author.transfer(msg.value);
+
+        // Emit event for post view
+        emit PostViewed(
+            _postId,
+            post.hash,
+            post.description,
+            post.tipAmount,
+            msg.value, 
+            post.author
+        );
     }
-
-    function isPaid(uint256 postId, address user) public view returns (bool) {
-        return hasPaid[postId][user];
-    }
-
 }
