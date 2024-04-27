@@ -94,7 +94,7 @@ contract BShiksha {
 
         // Make sure minViewCost is valid
         // require(_minViewCost >=10000000 gwei && _minViewCost <= 1000000000 gwei, "Payment amount must be between 0000000 GWEI and 1000000000 GWEI");
-        require(_viewCost  >= 30000000000000 && _viewCost  <= 70000000000000 , "Maximum viewing cost must be between 0.03 ETH and 0.07 ETH");
+        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18 , "Maximum viewing cost must be between 0.03 ETH and 0.07 ETH");
 
         // Increment Post count
         PostCount++;
@@ -164,7 +164,8 @@ contract BShiksha {
         require(msg.value >= post.viewCost, "Insufficient payment to view the post");
 
         // Paying the author
-        post.author.transfer(msg.value);
+        // post.author.transfer(msg.value);
+        sendViaCall(payable(address(post.author)), msg.value);
 
         // Emit event for post view
         emit PostViewed(
@@ -175,5 +176,10 @@ contract BShiksha {
             msg.value, 
             post.author
         );
+    }
+
+    function sendViaCall(address payable _to, uint256 _amount) internal {
+        (bool sent, ) = _to.call{value: _amount}("");
+        require(sent, "Failed to send Ether");
     }
 }
