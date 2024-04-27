@@ -1,163 +1,169 @@
-//SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+document.getElementById("myForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    let responseData;
+    try {
+        const formData = new FormData();
 
-contract BShiksha {
-    // Enum to represent user roles
-    enum Role {
-        Faculty,
-        Viewer
-    }
-    
-    // Function to receive Ether. msg.data must be empty
-    receive() external payable {}
+        formData.append("title", document.getElementById("title").value);
+        formData.append(
+            "description",
+            document.getElementById("description").value
+        );
 
-    // Fallback function is called when msg.data is not empty
-    fallback() external payable {}
-
-    // Mapping to store user addresses and their roles
-    mapping(address => Role) public userRoles;
-
-    function assignUserRoles(string memory _userType) public pure returns (Role) {
-        // Convert user type to lowercase for case-insensitive comparison
-        bytes32 userType = keccak256(abi.encodePacked(_userType));
-
-        // Assign roles based on user type
-        if (userType == keccak256(abi.encodePacked("faculty"))) {
-            return Role.Faculty;
+        const fileInput = document.getElementById("file");
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            formData.append("file", file);
         } else {
-            return Role.Viewer;
+            console.error("No file selected");
+            return;
         }
+
+        const response = await fetch("/submit", {
+            method: "POST",
+            body: formData,
+        });
+        responseData = await response.json();
+    } catch (error) {
+        console.error(error);
     }
 
-    // Stores Posts
-    uint256 public PostCount = 0;
-    mapping(uint256 => Post) public Posts;
+    // console.log(responseData);
 
-    struct Post {
-        uint256 id;
-        string hash;
-        string description;
-        uint256 viewCost;
-        uint256 tipAmount;
-        address payable author;
+    //web3
+    if (typeof window.ethereum !== "undefined") {
+        const web3 = new Web3(window.ethereum);
+        try {
+            const currentAccount = await connectAccount();
+            const { contractInstance } = await getContract(web3);
+            const txnHash = await uploadPostToBlock(
+                web3,
+                contractInstance,
+                currentAccount,
+                responseData
+            );
+            await fetchPostDetails(web3, contractInstance.abi, txnHash);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    } else {
+        console.log("MetaMask is not installed");
     }
+});
 
-    // Array to store all posts
-    Post[] public posts;
-
-    // Modifier to restrict functions to faculty members only
-    modifier onlyFacultyMember() {
-        require(
-            userRoles[msg.sender] == Role.Faculty,
-            "Only faculty members can create posts"
-        );
-        _;
+async function connectAccount() {
+    try {
+        const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+        });
+        const currentAccount = accounts[0];
+        console.log("Connected wallet address:", currentAccount);
+        return currentAccount;
+    } catch (error) {
+        console.error("Error connecting to MetaMask:", error);
+        throw error;
     }
-
-    // creating an event for Post uploading
-    event PostCreated(
-        uint256 id,
-        string hash,
-        string description,
-        uint256 viewCost,
-        uint256 tipAmount,
-        address payable author
-    );
-
-    // creating an event for Post tipping
-    event PostTipped(
-        uint256 id,
-        string hash,
-        string description,
-        uint256 tipAmount,
-        address payable author
-    );
-
-    // create Posts
-    function uploadPost (
-        string memory _PostHash,
-        string memory _description,
-        uint256 _viewCost
-    ) public onlyFacultyMember returns (uint256) {
-        // Makes sure Post hash exists
-        require(bytes(_PostHash).length > 0);
-
-        // Makes sure Post description exists
-        require(bytes(_description).length > 0);
-
-        // Make sure _viewCost is valid
-        // require(_viewCost >= 1000 && _viewCost <= 100000);
-        // Increment Post count
-        PostCount++;
-
-        // Add Post to contract
-        Posts[PostCount] = Post(
-            PostCount,
-            _PostHash,
-            _description,
-            _viewCost,
-            0,
-            payable(msg.sender)
-        );
-
-
-        // Trigger the event
-        emit PostCreated(
-            PostCount,
-            _PostHash,
-            _description,
-            _viewCost,
-            0,
-            payable(msg.sender)
-        );
-
-        return PostCount;
-    }
-
-    // Tip Posts
-    function tipPostOwner(uint256 _id) public payable {
-        // Validating the Post
-        require(_id > 0 && _id <= PostCount);
-
-        // Fetching the author of Post/post
-        address payable _author = Posts[_id].author;
-
-        // Paying the author
-        _author.transfer(msg.value);
-
-        // Increment the tip amount
-        Posts[_id].tipAmount += msg.value;
-
-        // Trigger event when a Post is tipped
-        emit PostTipped(
-            _id,
-            Posts[_id].hash,
-            Posts[_id].description,
-            Posts[_id].tipAmount,
-            _author
-        );
-    }
-
-    function getPost(uint256 postId) public view returns (uint256 id, string memory hash, string memory description, uint256 viewCost, uint256 tipAmount, address payable author) {
-        Post memory post = Posts[postId];
-        return (post.id, post.hash, post.description, post.viewCost, post.tipAmount, post.author);
-    }
-
-    // mapping(uint256 => mapping(address => bool)) public hasPaid;
-
-    function viewPost(uint256 postId) public payable {
-        // require(!hasPaid[postId][msg.sender]);
-        // require(msg.value == Posts[postId].viewCost);
-
-        // Process payment
-        sendViaCall(payable(address(this)), msg.value);
-        // hasPaid[postId][msg.sender] = true;
-    }
-   function sendViaCall(address payable _to, uint256 _amount) internal {
-    // Call returns a boolean value indicating success or failure.
-    // This is the current recommended method to use.
-    (bool sent, ) = _to.call{value: _amount}("");
-    require(sent, "Failed to send Ether");
 }
 
+async function getContract(web3) {
+    try {
+        const response = await fetch("/BShiksha.json");
+        if (!response.ok) {
+            throw new Error("Failed to fetch contract artifact");
+        }
+        const json = await response.text();
+        const contractArtifact = JSON.parse(json);
+        const abi = contractArtifact.abi;
+        const deployment = Object.keys(contractArtifact.networks);
+        console.log(contractArtifact.networks);
+        const address =
+            contractArtifact.networks[deployment[deployment.length - 1]];
+        console.log(address.address);
+        const contractInstance = new web3.eth.Contract(abi, address.address);
+        const networkId = await web3.eth.net.getId();
+        return { contractInstance };
+    } catch (error) {
+        console.error("Error fetching contract artifact:", error);
+        throw error;
+    }
+}
+
+async function uploadPostToBlock(
+    web3,
+    contractInstance,
+    currentAccount,
+    postData
+) {
+    try {
+        const transaction = contractInstance.methods.uploadPost(
+            postData.title,
+            postData.cid
+        );
+        const gasLimit = await transaction.estimateGas({ from: currentAccount });
+        const gasPrice = await web3.eth.getGasPrice();
+        const data = transaction.encodeABI();
+        const nonce = await web3.eth.getTransactionCount(currentAccount);
+        const gasLimitHex = web3.utils.toHex(gasLimit);
+        const txObject = {
+            from: currentAccount,
+            to: contractInstance.options.address,
+            gas: gasLimitHex,
+            gasPrice: gasPrice,
+            data: data,
+        };
+        console.log(txObject);
+        const txnHash = await window.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [txObject],
+        });
+        console.log("txnHash = " + txnHash);
+        // uploadToSQL(txnHash)
+        return txnHash;
+    } catch (error) {
+        console.error("Error uploading post:", error);
+        throw error;
+    }
+}
+
+async function fetchPostDetails(web3, abi, transactionHash) {
+    const transactionReceipt = await web3.eth.getTransactionReceipt(
+        transactionHash
+    );
+    console.log(transactionReceipt);
+    if (!transactionReceipt) {
+        console.error('Transaction receipt not found');
+        return;
+    }
+    const eventSignature = web3.utils.keccak256('PostCreated(uint256,string,string,uint256,address)');
+    const event = transactionReceipt.logs.find(log => log.topics[0] === eventSignature);
+
+    if (!event) {
+        console.error('PostUploaded event not found in the transaction logs');
+        return;
+    }
+    console.log("event = " + event)
+
+    const decodedData = abi.decodeLog(
+        [
+            { type: 'uint256', name: 'id', indexed: false },
+            { type: 'string', name: 'hash', indexed: false },
+            { type: 'string', name: 'description', indexed: false },
+            { type: 'uint256', name: 'tipAmount', indexed: false },
+            { type: 'address payable', name: 'author', indexed: false }
+        ],
+        event.data,
+        event.topics.slice(1) // Remove the first topic (signature)
+    );
+
+    const id = decodedData.id;
+    const ipfsHash = decodedData.hash;
+    const description = decodedData.description;
+    const tipAmount = decodedData.tipAmount;
+    const author = decodedData.author;
+
+    console.log('Post ID:', id);
+    console.log('IPFS Hash:', ipfsHash);
+    console.log('Description:', description);
+    console.log('Description:', tipAmount);
+    console.log('Description:', author);
 }
