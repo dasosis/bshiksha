@@ -15,6 +15,7 @@ document.getElementById('myForm').addEventListener('submit', async (event) => {
             console.error('No file selected');
             return;
         }
+        formData.append('value', document.getElementById('value').value);
 
         const response = await fetch('/submit', {
             method: 'POST',
@@ -25,17 +26,18 @@ document.getElementById('myForm').addEventListener('submit', async (event) => {
         console.error(error);
     }
 
-    // console.log(responseData);
+    console.log('Fetch Data from Server...', responseData);
 
-    //web3
     if (typeof window.ethereum !== 'undefined') {
-        
+
         const web3 = new Web3(window.ethereum);
         try {
             const currentAccount = await connectAccount();
-            const {contractInstance} = await getContract(web3)
+            const contractArtifact = await getContractArtifact();
+            const { contractInstance } = await getcontractInstance(web3, contractArtifact);
             const TxReciept = await uploadPostToBlock(web3, contractInstance, currentAccount, responseData);
-            const {postData} = await getPostFromBlock(contractInstance);
+            const decodedLogs = await decodeReciept(web3, TxReciept, contractArtifact.abi);
+            // const {postData} = await getPostFromBlock(TxReciept);
         } catch (error) {
             console.log(error);
         }
@@ -44,41 +46,24 @@ document.getElementById('myForm').addEventListener('submit', async (event) => {
     }
 });
 
-async function getPostFromBlock(contractInstance) {
-    try {
-        const postId = '1';
-        const transaction = contractInstance.methods.getPost(
-            postId
-        );
-        const postData = await transaction.call();
-        console.log(postData);
-        return postData;
-    } catch (error) {
-        console.error('Error uploading post:', error);
-        throw error;
-    }
+async function decodeReciept(web3, TxReciept, abi) {
+    const decodedLogs = web3.eth.abi.decodeLog(abi.inputs, TxReciept.logs[0].data, TxReciept.logs[0].topics);
+    console.log(decodedLogs);
+    return decodedLogs;
 }
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     const checkPostsBtn = document.getElementById('check-posts-btn');
-//     const postsList = document.getElementById('posts-list');
-//     checkPostsBtn.addEventListener('click', async function () {
-//         const count = await getPostCount();
-//     });
-//     // Function to retrieve posts
-//     async function getPosts() {
-//         try {
-//             console.log('check');
-//             const count = getPostCount();
-//         }
-//         catch (error) {
-//             console.error('Error retrieving posts:', error);
-//         }
+// async function getPostFromBlock(contractInstance) {
+//     try {
+//         const transaction = contractInstance.methods.callPost(
+//             postId
+//         );
+//         const postData = await transaction.call();
+//         console.log(postData);
+//         return postData;
+//     } catch (error) {
+//         console.error('Error uploading post:', error);
+//         throw error;
 //     }
-// });
-
-// async function getPostCount() {
-    
 // }
 
 async function connectAccount() {
@@ -93,7 +78,7 @@ async function connectAccount() {
     }
 }
 
-async function getContract(web3) {
+async function getContractArtifact() {
     try {
         const response = await fetch('/BShiksha.json');
         if (!response.ok) {
@@ -101,11 +86,17 @@ async function getContract(web3) {
         }
         const json = await response.text();
         const contractArtifact = JSON.parse(json);
+        return contractArtifact;
+    } catch (error) {
+        console.log(error);
+    }
+}
+async function getcontractInstance(web3, contractArtifact) {
+    try {
         const abi = contractArtifact.abi;
         const deployment = Object.keys(contractArtifact.networks);
-        console.log(contractArtifact.networks);
         const address = contractArtifact.networks[deployment[deployment.length - 1]];
-        console.log(address.address);
+        console.log('Contract Address', address.address);
         const contractInstance = new web3.eth.Contract(abi, address.address);
         const networkId = await web3.eth.net.getId();
         return { contractInstance };
@@ -117,10 +108,11 @@ async function getContract(web3) {
 
 async function uploadPostToBlock(web3, contractInstance, currentAccount, postData) {
     try {
-        const tempPostData = '1';
+        const valueinWei = parseInt(web3.utils.toWei(postData.value.toString(), 'ether'));
         const transaction = contractInstance.methods.uploadPost(
-            tempPostData,
-            postData.cid
+            postData.cid,
+            postData.description,
+            valueinWei
         );
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
         const gasPrice = await web3.eth.getGasPrice();
@@ -134,15 +126,14 @@ async function uploadPostToBlock(web3, contractInstance, currentAccount, postDat
             gasPrice: gasPrice,
             data: data
         };
-        console.log(txObject);
+        console.log('Sending...', txObject);
         const TxHash = await window.ethereum.request({
             method: 'eth_sendTransaction',
             params: [txObject]
         });
-        // console.log(TxHash);
         const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
-        console.log(TxReciept);
-        return(TxReciept);
+        console.log('Successful Upload!! ', TxReciept);
+        return (TxReciept);
     } catch (error) {
         console.error('Error uploading post:', error);
         throw error;

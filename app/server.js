@@ -20,13 +20,14 @@ app.get('/', (req, res) => {
 
 app.post('/submit', upload.single('file'), async (req, res) => {
     try {
-        const { title, description } = req.body;
+        const { title, description, value} = req.body;
         const fileData = req.file.buffer;
         const { cid } = await uploadFileToIPFS(fileData);
         const responseData = {
             title,
             description,
-            cid : cid.toString()
+            cid : cid.toString(),
+            value
         };
         res.json(responseData);
     } catch (err) {
