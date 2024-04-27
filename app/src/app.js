@@ -167,3 +167,23 @@ async function fetchPostDetails(web3, abi, transactionHash) {
     console.log('Description:', tipAmount);
     console.log('Description:', author);
 }
+
+// Function to check if a user has paid to view a post
+async function checkPayment(postId, userAddress) {
+    const isPaid = await contractInstance.methods.isPaid(postId, userAddress).call();
+    return isPaid;
+}
+
+// Example usage
+const postId = 123; // ID of the post
+const userAddress = "0x123456789..."; // User's Ethereum address
+const userHasPaid = await checkPayment(postId, userAddress);
+
+if (userHasPaid) {
+    // User has paid, display post content
+    console.log("User has paid to view the post");
+} else {
+    // User has not paid, prompt to make a payment
+    console.log("User has not paid to view the post");
+    // Display a message or UI element prompting the user to make a payment
+}
