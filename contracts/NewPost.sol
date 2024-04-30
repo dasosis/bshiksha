@@ -79,6 +79,7 @@ contract BShiksha {
 
     // create Posts
     function uploadPost (
+        uint256 _postId,
         string memory _PostHash,
         string memory _description,
         uint256 _viewCost
@@ -100,8 +101,8 @@ contract BShiksha {
         PostCount++;
 
         // Add Post to contract
-        Posts[PostCount] = Post(
-            PostCount,
+        Posts[_postId] = Post(
+            _postId,
             _PostHash,
             _description,
             0,
@@ -112,7 +113,7 @@ contract BShiksha {
 
         // Trigger the event
         emit PostCreated(
-            PostCount,
+            _postId,
             _PostHash,
             _description,
             0,
@@ -126,7 +127,7 @@ contract BShiksha {
     // Tip Posts
     function tipPostOwner(uint256 _id) public payable {
         // Validating the Post
-        require(_id > 0 && _id <= PostCount);
+        require(_id >= 0 && _id <= PostCount);
 
         // Fetching the author of Post/post
         address payable _author = Posts[_id].author;
@@ -155,7 +156,7 @@ contract BShiksha {
 
     function viewPost(uint256 _postId) public payable {
         // Validating the Post
-        require(_postId > 0 && _postId <= PostCount);
+        require(_postId >= 0 && _postId <= PostCount);
 
         // Fetching the post
         Post memory post = Posts[_postId];

@@ -177,3 +177,86 @@ async function viewPost(web3, contractInstance, currentAccount, postId) {
     }
 }
 
+
+/*
+async function viewPost(web3, contractInstance, currentAccount, postId) {
+    try {
+        if (!currentAccount) {
+            console.error('User account not found.');
+            return;
+        }
+        const postDetails = await contractInstance.methods.getPost(postId).call();
+        const viewCostWei = postDetails.viewCost;
+        const transaction = contractInstance.methods.viewPost(
+            postId
+        );
+        const gas = await transaction.estimateGas({ from: currentAccount, value: viewCostWei });
+        const gasPrice = await web3.eth.getGasPrice();
+        const data = transaction.encodeABI();
+        const nonce = await web3.eth.getTransactionCount(currentAccount);
+        const txObject = {
+            from: currentAccount,
+            to: contractInstance.options.address,
+            gas: gas,
+            gasPrice: gasPrice,
+            value: viewCostWei,
+            data: data,
+            nonce: nonce
+        };
+        const TxHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [txObject]
+        });
+        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
+        const receipt = await web3.eth.sendTransaction(txObject);
+        console.log('Transaction Receipt:', receipt);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+*/
+
+/*
+async function decodeReciept(web3, TxReciept, abi) {
+    const decodedLogs = web3.eth.abi.decodeLog(abi.inputs, TxReciept.logs[0].data, TxReciept.logs[0].topics);
+    console.log(decodedLogs);
+    return decodedLogs;
+}
+
+async function getPostFromBlock(web3, contractInstance, currentAccount,postData) {
+    try {
+        console.log(web3,contractInstance,currentAccount,postData)
+        const valueinWei = web3.utils.toWei(postData.value.toString(), 'ether').toString();
+        const transaction = contractInstance.methods.viewPost(
+            '1'
+        );
+        const gasLimit = await transaction.estimateGas({ from: currentAccount });
+        const gasPrice = await web3.eth.getGasPrice();
+        const data = transaction.encodeABI();
+        const nonce = await web3.eth.getTransactionCount(currentAccount);
+        const gasLimitHex = web3.utils.toHex(gasLimit);
+        const value = web3.utils.toHex(valueinWei)
+        const txObject = {
+            from: currentAccount,
+            to: contractInstance.options.address,
+            gas: gasLimitHex,
+            gasPrice: gasPrice,
+            value: value,
+            data: data
+        };
+        console.log('Sending...', txObject);
+        const TxHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [txObject]
+        });
+        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
+        console.log('Successful Upload!! ', TxReciept);
+        return (TxReciept);
+    } catch (error) {
+        console.error('Error uploading post:', error);
+        throw error;
+    }
+}
+*/
+
+
