@@ -1,20 +1,21 @@
-import { connectAccount } from './metamask.js';
-import { getcontractInstance, getContractArtifact } from './contract.js';
-import {  uploadPostToBlock, getPost, sendPostFee } from './block.js';
-
-
-
-
-
+import { connectAccount} from './metamask.js';
+import { submitPost } from './post.js';
 
 var responseData;
-var contractInstance;
-var currentAccount;
+var currentAccount = await connectAccount();
+var success_flag;
 
-
-
-
-
+// document.getElementById('connect_wallet').addEventListener('click', async (event) => {
+//     event.preventDefault;
+//     try {
+//         if (typeof window.ethereum !== "undefined") {
+//             currentAccount = await connectAccount();
+//             console.log(currentAccount);
+//         }
+//     } catch (error) {
+//         console.error(error);
+//     }
+// });
 
 document.getElementById("myForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -43,59 +44,39 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
         });
         responseData = await response.json();
     } catch (error) {
-        console.error(error);
+        console.error("Error POST Form: ", error);
     }
-
     console.log("Fetch Data from Server...", responseData);
-    if (typeof window.ethereum !== "undefined") {
-        const web3 = new Web3(window.ethereum);
-        try {
-            currentAccount = await connectAccount();
-            const contractArtifact = await getContractArtifact();
-            contractInstance = await getcontractInstance(
-                web3,
-                contractArtifact
-            );
-            console.log("contract instance = ", contractInstance.contractInstance);
-            var success_post = await uploadPostToBlock(
-                web3,
-                contractInstance.contractInstance,
-                currentAccount[0],
-                responseData
-            );
-
-            await fetch('/success', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(success_post)
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to send data to the server');
-                }
-            }).catch(error => {
-                console.error(error);
-            });
-            
-        } catch (error) {
-            console.log(error);
-        }
-    } else {
-        console.log("MetaMask is not installed");
-    }
+    success_flag = await submitPost(currentAccount,responseData);
 });
 
 
 
-document.getElementById("view_button").addEventListener("click", async(event) =>{
-    event.preventDefault();
-    console.log("hello");
-    const postCount = await contractInstance.contractInstance.methods.PostCount().call();
 
-    for (let index = 1; index <= 3; index++) {
-        const postDetails = await getPost(contractInstance.contractInstance, index);
-    
-    }
-    // await sendPostFee(contractInstance.contractInstance, currentAccount[1], postDetails);
-});
+    // await fetch('/success', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(success_post)
+    // }).then(response => {
+    //     if (!response.ok) {
+    //         throw new Error('Failed to send data to the server');
+    //     }
+    // }).catch(error => {
+    //     console.error(error);
+    // });
+
+
+
+// document.getElementById("view_button").addEventListener("click", async (event) => {
+//     event.preventDefault();
+//     console.log("hello");
+//     const postCount = await contractInstance.contractInstance.methods.PostCount().call();
+
+//     for (let index = 1; index <= 3; index++) {
+//         const postDetails = await getPost(contractInstance.contractInstance, index);
+
+//     }
+//     // await sendPostFee(contractInstance.contractInstance, currentAccount[1], postDetails);
+// });

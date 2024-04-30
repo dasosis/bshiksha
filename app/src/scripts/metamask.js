@@ -1,15 +1,5 @@
-export var web3;
-
-document.getElementById('connect_wallet').addEventListener('click', async(event) => {
-    event.preventDefault;
-    try {
-        if (typeof window.ethereum !== "undefined") {
-            const web3 = new Web3(window.ethereum);
-        }
-} catch (error) {
-    console.error(error);
-}
-})
+export const web3 = new Web3(window.ethereum);
+export var currentAccount;
 
 export async function connectAccount() {
     try {

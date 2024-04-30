@@ -1,29 +1,15 @@
-export await function getResponseData(){
-    try {
-        const formData = new FormData();
+import { getContractArtifact, getcontractInstance } from "./contract.js";
+import { uploadPostToBlock, getPostId } from "./block.js";
 
-        formData.append("title", document.getElementById("title").value);
-        formData.append(
-            "description",
-            document.getElementById("description").value
-        );
-
-        const fileInput = document.getElementById("file");
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            formData.append("file", file);
-        } else {
-            console.error("No file selected");
-            return;
-        }
-        formData.append("value", document.getElementById("value").value);
-
-        const response = await fetch("/submit", {
-            method: "POST",
-            body: formData,
-        });
-        responseData = await response.json();
-    } catch (error) {
-        console.error(error);
-    }
+export async function submitPost(currentAccount,responseData){
+    const contractArtifact = await getContractArtifact();
+    const {contractInstance} = await getcontractInstance(contractArtifact);
+    console.log("contract instance = ", contractInstance);
+    const postId = await getPostId();
+    const success_post = await uploadPostToBlock(
+        currentAccount[0],
+        responseData,
+        postId
+    );
+    return success_post;
 }

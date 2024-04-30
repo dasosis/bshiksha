@@ -1,3 +1,5 @@
+import { web3 } from "./metamask.js";
+
 export async function getContractArtifact() {
     try {
         const response = await fetch("/BShiksha.json");
@@ -12,15 +14,15 @@ export async function getContractArtifact() {
     }
 }
 
-export async function getcontractInstance(web3, contractArtifact) {
+export async function getcontractInstance() {
     try {
+        const contractArtifact = await getContractArtifact();
         const abi = contractArtifact.abi;
         const deployment = Object.keys(contractArtifact.networks);
-        const address =
-            contractArtifact.networks[deployment[deployment.length - 1]];
-        console.log("Contract Address", address.address);
+        const address = contractArtifact.networks[deployment[deployment.length - 1]];
+        console.log("Contract Address", address);
         const contractInstance = new web3.eth.Contract(abi, address.address);
-        const networkId = await web3.eth.net.getId();
+        // const networkId = await web3.eth.net.getId();
         return { contractInstance };
     } catch (error) {
         console.error("Error fetching contract artifact:", error);

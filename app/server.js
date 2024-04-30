@@ -9,7 +9,6 @@ const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
-var postId = 1;
 
 app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
@@ -35,10 +34,6 @@ app.post('/submit', upload.single('file'), async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-});
-app.post('/success', async (req, res) => {
-    postId += 1;
-    res.sendStatus(200);
 });
 
 async function uploadFileToIPFS(fileData) {

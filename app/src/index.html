@@ -11,7 +11,7 @@
 <body>
     <div class="form-container">
         <h2>Submit Form</h2>
-        <form id="myForm" enctype="multipart/form-data" action="/submit" method="POST">
+        <form id="myForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="title">Title:</label>
                 <input type="text" id="title" name="title">
@@ -31,12 +31,12 @@
             <div class="form-group">
                 <button type="submit">Submit</button>
             </div>
-            <div class="form-group">
-                <button id="connect_wallet">Connect Wallet</button>
-            </div>
         </form>
-        <div class="form-group">
+        <div>
             <button id="view_button">View</button>
+        </div>
+        <div>
+            <button id="connect_wallet">Connect Wallet</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>

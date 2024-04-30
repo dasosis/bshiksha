@@ -1,25 +1,24 @@
+import { getcontractInstance } from "./contract.js";
+import { web3 } from "./metamask.js";
+
 export async function uploadPostToBlock(
-    web3,
-    contractInstance,
     currentAccount,
-    postData
+    postData,
+    postId
 ) {
     try {
-        const valueinWei = web3.utils
-            .toWei(postData.value.toString(), "ether")
-            .toString();
-        console.log(valueinWei);
+        const valueinWei = web3.utils.toWei(postData.value.toString(), "ether").toString();
+        const {contractInstance} = await getcontractInstance();
         const transaction = contractInstance.methods.uploadPost(
-            postData.postId,
+            postId,
             postData.cid,
             postData.description,
             valueinWei
         );
-        console.log("PostData Id = " + postData.postId);
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
         const gasPrice = await web3.eth.getGasPrice();
         const data = transaction.encodeABI();
-        const nonce = await web3.eth.getTransactionCount(currentAccount);
+        // const nonce = await web3.eth.getTransactionCount(currentAccount);
         const gasLimitHex = web3.utils.toHex(gasLimit);
         const txObject = {
             from: currentAccount,
@@ -44,23 +43,32 @@ export async function uploadPostToBlock(
     }
 }
 
-export async function getPost(contractInstance, postId) {
-    try {
-        console.log("Post Id in GetPost - ",postId);
-        const postDetails = await contractInstance.methods.getPost(postId).call();
-        console.log("Post Call - ", postDetails);
-        return postDetails;
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
+// export async function getPost(postId) {
+//     try {
+//         console.log("Post Id in GetPost - ",postId);
+//         const {contractInstance} = await getcontractInstance();
+//         const postDetails = await contractInstance.methods.getPost(postId).call();
+//         console.log("Post Call - ", postDetails);
+//         return postDetails;
+//     } catch (error) {
+//         console.error("Error:", error);
+//     }
+// }
 
-export async function sendPostFee(contractInstance, currentAccount, postDetails){
-    const viewCostWei = postDetails.viewCost;
-    const postId = postDetails.id;
-    const txReceipt = await contractInstance.methods.viewPost(postId).send({
-        from: currentAccount,
-        value: viewCostWei,
-    });
+// export async function sendPostFee(currentAccount, postDetails){
+//     const viewCostWei = postDetails.viewCost;
+//     const postId = postDetails.id;
+//     const {contractInstance} = await getcontractInstance();
+//     const txReceipt = await contractInstance.methods.viewPost(postId).send({
+//         from: currentAccount,
+//         value: viewCostWei,
+//     });
+// }
+
+export async function getPostId() {
+    const {contractInstance} = await getcontractInstance();
+    const postCount = await contractInstance.methods.PostCount().call();
+    console.log("post count = ",postCount);
+    return postCount;
 }
 
