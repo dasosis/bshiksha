@@ -9,6 +9,7 @@ const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
+var postId = 1;
 
 app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
@@ -20,19 +21,24 @@ app.get('/', (req, res) => {
 
 app.post('/submit', upload.single('file'), async (req, res) => {
     try {
-        const { title, description, value} = req.body;
+        const { title, description, value } = req.body;
         const fileData = req.file.buffer;
         const { cid } = await uploadFileToIPFS(fileData);
         const responseData = {
             title,
             description,
-            cid : cid.toString(),
-            value
+            cid: cid.toString(),
+            value,
+            postId
         };
         res.json(responseData);
     } catch (err) {
         console.log(err);
     }
+});
+app.post('/success', async (req, res) => {
+    postId += 1;
+    res.sendStatus(200);
 });
 
 async function uploadFileToIPFS(fileData) {
@@ -43,7 +49,7 @@ async function uploadFileToIPFS(fileData) {
         const { cid } = await client.add(fileData);
         return { cid };
     } catch (error) {
-        console.error('Error uploading file:', error);
+        console.error(error);
     }
 }
 

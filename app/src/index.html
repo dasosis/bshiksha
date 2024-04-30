@@ -9,7 +9,6 @@
 </head>
 
 <body>
-
     <div class="form-container">
         <h2>Submit Form</h2>
         <form id="myForm" enctype="multipart/form-data" action="/submit" method="POST">
@@ -32,10 +31,16 @@
             <div class="form-group">
                 <button type="submit">Submit</button>
             </div>
+            <div class="form-group">
+                <button id="connect_wallet">Connect Wallet</button>
+            </div>
         </form>
+        <div class="form-group">
+            <button id="view_button">View</button>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
-    <script type="module" src="app.js"></script>
+    <script type="module" src="/scripts/app.js"></script>
 
 </body>
 
