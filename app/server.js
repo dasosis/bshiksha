@@ -26,8 +26,8 @@ app.post('/submit', upload.single('file'), async (req, res) => {
         const responseData = {
             title,
             description,
-            cid: cid.toString(),
-            value,
+            cid : cid.toString(),
+            value
         };
         res.json(responseData);
     } catch (err) {
