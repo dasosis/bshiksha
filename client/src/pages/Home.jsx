@@ -1,11 +1,12 @@
 import Navbar from '../components/Navbar/Navbar';
 import Postview from '../components/PostView/Postview';
 import CommentView from '../components/CommentView/CommentView';
+import Upload from '../components/Upload/Upload';
 
 import { useRender } from '../renderDataStore';
 
 const Home = () => {
-  const profileRender = useRender((state) => state.profilePageRender);
+  const pageRender = useRender((state) => state.pageRender);
   return (
     <div
       className='Home'
@@ -20,13 +21,17 @@ const Home = () => {
       }}
     >
       <Navbar />
-      {profileRender ? (
+      {pageRender == 1 ? (
         <div className='profileWrapper'>
           <div className='basicProfile'></div>
           <div className='advProfile'>
             <div className='profilePostsContainer'></div>
-            <div className="detailProfile"></div>
+            <div className='detailProfile'></div>
           </div>
+        </div>
+      ) : pageRender == 2 ? (
+        <div className='uploadWrapper'>
+          <Upload />
         </div>
       ) : (
         <div className='feedWrapper'>

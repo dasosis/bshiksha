@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 let renderDataStore = (set) => ({
-  profilePageRender: false,
-  setProfilePageRender: (profilePageRender) => set({ profilePageRender }),
+  pageRender: 0,
+  setPageRender: (pageRender) => set({ pageRender }),
 });
 
 renderDataStore = devtools(renderDataStore, 'renderData');
