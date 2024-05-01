@@ -66,16 +66,25 @@ contract BShiksha {
         address payable author
     );
 
+    // create Posts
     function uploadPost (
-        uint256 _postId,
         string memory _PostHash,
         string memory _description,
         uint256 _viewCost
     ) public onlyFacultyMember returns (uint256) {
+        // Makes sure Post hash exists
         require(bytes(_PostHash).length > 0);
         require(bytes(_description).length > 0);
         require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
 
+        // uint256 value = 18 - _exp;
+        // _viewCost = (_viewCost * 1e18) / value;
+
+        // Make sure minViewCost is valid
+        // require(_minViewCost >=10000000 gwei && _minViewCost <= 1000000000 gwei, "Payment amount must be between 0000000 GWEI and 1000000000 GWEI");
+        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18 , "Maximum viewing cost must be between 0.03 ETH and 0.07 ETH");
+
+        // Increment Post count
         PostCount++;
 
         Posts[_postId] = Post(
@@ -87,6 +96,8 @@ contract BShiksha {
             payable(msg.sender)
         );
 
+
+        // Trigger the event
         emit PostCreated(
             _postId,
             _PostHash,
@@ -120,10 +131,20 @@ contract BShiksha {
     }
 
     function viewPost(uint256 _postId) public payable {
-        require(_postId >= 0 && _postId <= PostCount);
+        // Validating the Post
+        require(_postId > 0 && _postId <= PostCount);
+
+        // Fetching the post
         Post memory post = Posts[_postId];
+
+        // Ensuring payment is enough to view the post
         require(msg.value >= post.viewCost, "Insufficient payment to view the post");
+
+        // Paying the author
+        // post.author.transfer(msg.value);
         sendViaCall(payable(address(post.author)), msg.value);
+
+        // Emit event for post view
         emit PostViewed(
             _postId,
             post.hash,

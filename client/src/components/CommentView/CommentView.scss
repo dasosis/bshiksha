@@ -1,0 +1,28 @@
+.CommentView {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+
+  position: sticky; /* Key property for stickiness */
+  top: 5em; /* Adjust offset from the top if needed */
+
+  gap: 0.5em;
+
+  margin: 0 2em;
+  padding: 1em;
+  border-radius: 1em;
+  background-color: #f2f2f2;
+
+  overflow-y: scroll;
+
+  max-width: 30vw;
+  max-height: 85vh;
+
+  -ms-overflow-style: auto;
+  scrollbar-width: thin;
+}
+
+.CommentView::-webkit-scrollbar {
+  display: auto;
+}
