@@ -1,6 +1,13 @@
 import React from 'react';
+// import { connectAccount } from '../../../../app/src/scripts/metamask.js';
+import { submitPost } from '../../../../app/src/scripts/post.js';
+
+import { useStore } from '../../dataStore.js';
+
+import './Upload.scss';
 
 const Upload = () => {
+  const currentAccount = useStore((state) => state.currentAccount);
   const title = React.useRef();
   const desc = React.useRef();
   const value = React.useRef();
@@ -47,7 +54,7 @@ const Upload = () => {
         </div>
         <div className='form-group'>
           <label htmlFor='description'>Description:</label>
-          <textarea id='description' name='description' ref={desc}></textarea>
+          <textarea id='description' name='description' ref={desc} rows={4}></textarea>
         </div>
         <div className='form-group'>
           <label htmlFor='value'>Enter Value in ETH:</label>
