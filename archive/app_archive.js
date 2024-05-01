@@ -30,21 +30,6 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
     }
 
     console.log("Fetch Data from Server...", responseData);
-    // const hostname = window.location.hostname;
-    // const ipfsPort = process.env.IPFS_PORT;
-
-    // if (!ipfsPort) {
-    //     console.warn(
-    //         "IPFS_PORT environment variable not found. Using default port 5001."
-    //     );
-    //     // ipfsPort = 5001;
-    // }
-    // else {
-    //     console.log(ipfsPort)
-    // }
-    // window.location.href = `http://${hostname}:8081/ipfs/${responseData.cid}`;
-
-    // window.location.href = `/ipfs/${}`;
     if (typeof window.ethereum !== "undefined") {
         const web3 = new Web3(window.ethereum);
         try {
@@ -54,15 +39,15 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
                 web3,
                 contractArtifact
             );
-            const TxReciept = await uploadPostToBlock(
+            await uploadPostToBlock(
                 web3,
                 contractInstance,
                 currentAccount[0],
                 responseData
             );
-            await viewPost(web3, contractInstance, currentAccount[1], 1);
-            // await getPostFromBlock(web3, contractInstance, currentAccount[1], responseData);
-            // const decodedLogs = await decodeReciept(web3, TxReciept, contractArtifact.abi);
+            const postDetails = await getPost(contractInstance, responseData.postId);
+            await sendPostFee(contractInstance, currentAccount[1], postDetails);
+            
         } catch (error) {
             console.log(error);
         }
@@ -71,20 +56,23 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
     }
 });
 
-async function viewPost(web3, contractInstance, currentAccount, postId) {
+async function sendPostFee(contractInstance, currentAccount, postDetails){
+    const viewCostWei = postDetails.viewCost;
+    const postId = postDetails.id;
+    const txReceipt = await contractInstance.methods.viewPost(postId).send({
+        from: currentAccount,
+        value: viewCostWei,
+    });
+}
+
+async function getPost(contractInstance, postId) {
     try {
+        console.log("Post Id in GetPost - ",postId);
         const postDetails = await contractInstance.methods.getPost(postId).call();
-        const viewCostWei = postDetails.viewCost;
-
-        // Call the viewPost function of the contract, passing the post ID and paying the required amount
-        const txReceipt = await contractInstance.methods.viewPost(postId).send({
-            from: currentAccount,
-            value: viewCostWei,
-        });
-
-        console.log("Transaction Receipt:", txReceipt);
+        console.log("Post Call - ", postDetails);
+        return postDetails;
     } catch (error) {
-        console.error("Error:", error.message);
+        console.error("Error:", error);
     }
 }
 
@@ -115,6 +103,7 @@ async function getContractArtifact() {
         console.log(error);
     }
 }
+
 async function getcontractInstance(web3, contractArtifact) {
     try {
         const abi = contractArtifact.abi;
@@ -168,7 +157,6 @@ async function uploadPostToBlock(
         });
         const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
         console.log("Successful Upload!! ", TxReciept);
-        return TxReciept;
     } catch (error) {
         console.error("Error uploading post:", error);
         throw error;

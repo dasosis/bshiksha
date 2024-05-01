@@ -9,7 +9,6 @@ const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
-var postId = 0;
 
 app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
@@ -24,11 +23,10 @@ app.post('/submit', upload.single('file'), async (req, res) => {
         const { title, description, value } = req.body;
         const fileData = req.file.buffer;
         const { cid } = await uploadFileToIPFS(fileData);
-        postId += 1;
         const responseData = {
             title,
             description,
-            cid : cid.toString(),
+            cid: cid.toString(),
             value,
             postId
         };
@@ -44,9 +42,10 @@ async function uploadFileToIPFS(fileData) {
         // console.log(`File content: ${fileData.toString()}`)
         // const fileData = await fs.(readFileSyncfilePath)
         const { cid } = await client.add(fileData);
-        
         return { cid };
-
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 
