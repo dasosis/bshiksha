@@ -1,5 +1,5 @@
 import { connectAccount} from './metamask.js';
-import { submitPost, getFeed, getPost } from './post.js';
+import { submitPost, getFeed, getPost, signup } from './post.js';
 
 var responseData;
 var currentAccount = await connectAccount();
@@ -97,3 +97,20 @@ for (var i = 0; i < postCount; i++) {
 //     }
 //     // await sendPostFee(contractInstance.contractInstance, currentAccount[1], postDetails);
 // });
+
+
+document.getElementById("signup").addEventListener("submit", async (event) => {
+    event.preventDefault();    
+    try{
+        const userData = {
+            userName: document.getElementById("userName").value,
+            userEmail: document.getElementById("userEmail").value,
+            isProfessor: document.getElementById("isProfessor").value,
+            universityName: document.getElementById("universityName").value
+        };
+        console.log("User Data:", userData);
+    } catch (error) {
+        console.error("Error POST Form: ", error);
+    }
+    // success_flag = await signup(currentAccount,userData);
+});

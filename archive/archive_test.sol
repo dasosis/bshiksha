@@ -2,18 +2,10 @@
 pragma solidity ^0.8.0;
 
 contract BShiksha {
-    mapping(address => User) public users;
-
-    struct User {
-        string userName;
-        string userEmail;
-        bool isProfessor;
-        string universityName;
-        address payable walletId;
-    }
-
     uint256 public PostCount = 0;
     mapping(uint256 => Post) public Posts;
+    mapping(address => User) public users;
+    // mapping(address => bool) public userExists;
 
     struct Post {
         uint256 id;
@@ -24,15 +16,15 @@ contract BShiksha {
         address payable author;
     }
 
-    Post[] public posts;
+    struct User {
+        string userName;
+        string userEmail;
+        bool isProfessor;
+        string universityName;
+        address payable walletId;
+    }
 
-    event UserSignedUp(
-        string userName,
-        string userEmail,
-        bool isProfessor,
-        string universityName,
-        address payable walletId
-    );
+    Post[] public posts;
 
     event PostCreated(
         uint256 id,
@@ -61,7 +53,7 @@ contract BShiksha {
         address payable author
     );
 
-    function uploadPost (
+    function uploadPost(
         uint256 _postId,
         string memory _PostHash,
         string memory _description,
@@ -69,7 +61,7 @@ contract BShiksha {
     ) public returns (uint256) {
         require(bytes(_PostHash).length > 0);
         require(bytes(_description).length > 0);
-        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
+        require(_viewCost >= 0 && _viewCost <= 50 * 1e18, "Set Value 0-50 ETH");
 
         PostCount++;
 
@@ -109,22 +101,45 @@ contract BShiksha {
         );
     }
 
-    function getPost(uint256 postId) public view returns (uint256 id, string memory hash, string memory description, uint256 tipAmount, uint256 viewCost, address payable author) {
+    function getPost(
+        uint256 postId
+    )
+        public
+        view
+        returns (
+            uint256 id,
+            string memory hash,
+            string memory description,
+            uint256 tipAmount,
+            uint256 viewCost,
+            address payable author
+        )
+    {
         Post memory post = Posts[postId];
-        return (post.id, post.hash, post.description, post.tipAmount, post.viewCost, post.author);
+        return (
+            post.id,
+            post.hash,
+            post.description,
+            post.tipAmount,
+            post.viewCost,
+            post.author
+        );
     }
 
     function viewPost(uint256 _postId) public payable {
         require(_postId >= 0 && _postId <= PostCount);
         Post memory post = Posts[_postId];
-        require(msg.value >= post.viewCost, "Insufficient payment to view the post");
+        require(
+            msg.value >= post.viewCost,
+            "Insufficient payment to view the post"
+        );
         sendViaCall(payable(address(post.author)), msg.value);
         emit PostViewed(
             _postId,
             post.hash,
             post.description,
             post.tipAmount,
-            msg.value, 
+            msg.value,
             post.author
         );
     }
@@ -179,13 +194,5 @@ contract BShiksha {
             universityName: _universityName,
             walletId: payable(msg.sender)
         });
-
-        emit UserSignedUp(
-        _userName,
-        _userEmail,
-        _isProfessor,
-        _universityName,
-        payable(msg.sender)
-    );
     }
 }

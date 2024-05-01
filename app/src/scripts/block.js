@@ -72,3 +72,53 @@ export async function callPostCount_block() {
     return postCount;
 }
 
+export async function signUpUser_block(currentAccount, userData) {
+    
+    try {
+        const {contractInstance} = await getcontractInstance();
+        const transaction = contractInstance.methods.signUpUser(
+            userData.userName, 
+            userData.userEmail, 
+            userData.isProfessor, 
+            userData.universityName
+        );
+        const gasLimit = await transaction.estimateGas({ from: currentAccount });
+        const gasPrice = await web3.eth.getGasPrice();
+        const data = transaction.encodeABI();
+        const gasLimitHex = web3.utils.toHex(gasLimit);
+        const txObject = {
+            from: currentAccount,
+            to: contractInstance.options.address,
+            gas: gasLimitHex,
+            gasPrice: gasPrice,
+            data: data,
+        };
+        console.log("Sending...", txObject);
+        const TxHash = await window.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [txObject],
+        });
+        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
+        console.log("Successfully Signed Up!! ", TxReciept);
+        if(TxReciept){
+            return 1;
+        } else return 0;
+    } catch (error) {
+        console.error("Error signing up: ", error);
+        throw error;
+    }
+}
+
+export async function getUserDetails(walletId) {
+    const {contractInstance} = await getcontractInstance();
+    try {
+        const userDetails = await contractInstance.methods.getUser(walletId).call();
+        console.log("User details: ", userDetails);
+        return userDetails;
+    } catch (error) {
+        console.error("Error getting user details:", error);
+    }
+}
+
+
+
