@@ -76,9 +76,7 @@ contract BShiksha {
         require(bytes(_description).length > 0);
         require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
 
-        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18 , "Maximum viewing cost must be between 0.03 ETH and 0.07 ETH");
-
-        PostCount = _postId;
+        PostCount++;
 
         Posts[_postId] = Post(
             _postId,
