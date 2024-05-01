@@ -3,6 +3,7 @@ import path from 'path';
 import pkg from 'body-parser';
 import multer from 'multer';
 import { create } from 'kubo-rpc-client';
+import cors from 'cors';
 
 const { urlencoded } = pkg;
 const app = express();
@@ -10,44 +11,44 @@ const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
 
+app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
 app.use(express.static(path.join(directoryPath, '../build/contracts')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(directoryPath, 'src', 'index.html'));
+  res.sendFile(path.join(directoryPath, 'src', 'index.html'));
 });
 
 app.post('/submit', upload.single('file'), async (req, res) => {
-    try {
-        const { title, description, value } = req.body;
-        const fileData = req.file.buffer;
-        const { cid } = await uploadFileToIPFS(fileData);
-        const responseData = {
-            title,
-            description,
-            cid : cid.toString(),
-            value
-        };
-        res.json(responseData);
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    const { title, description, value } = req.body;
+    const fileData = req.file.buffer;
+    const { cid } = await uploadFileToIPFS(fileData);
+    const responseData = {
+      title,
+      description,
+      cid: cid.toString(),
+      value,
+    };
+    res.json(responseData);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 async function uploadFileToIPFS(fileData) {
-    try {
-        const client = create();
-        // console.log(`File content: ${fileData.toString()}`)
-        // const fileData = await fs.(readFileSyncfilePath)
-        const { cid } = await client.add(fileData);
-        return { cid };
-    } catch (error) {
-        console.error(error);
-    }
+  try {
+    const client = create();
+    // console.log(`File content: ${fileData.toString()}`)
+    // const fileData = await fs.(readFileSyncfilePath)
+    const { cid } = await client.add(fileData);
+    return { cid };
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+  console.log(`Server listening at http://localhost:${port}`);
 });
