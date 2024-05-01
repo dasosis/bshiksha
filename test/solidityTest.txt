@@ -1,9 +1,0 @@
-for uploadPost:
-"QmXyZabc123", "Introduction to Solidity Programming", 40000000000000
-"QmAbCdEf456", "Blockchain Applications in Supply Chain Management", 50000000000000
-"QrStUvWx789", "Decentralized Finance (DeFi) Explained", 60000000000000
-
-correspoding for viewPost:
-1, 40000000000000
-2, 50000000000000
-3, 60000000000000
