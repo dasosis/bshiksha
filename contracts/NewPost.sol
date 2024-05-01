@@ -2,20 +2,14 @@
 pragma solidity ^0.8.0;
 
 contract BShiksha {
-    // Enum to represent user roles
     enum Role {
         Faculty,
         Viewer
     }
-
-    // Mapping to store user addresses and their roles
     mapping(address => Role) public userRoles;
 
     function assignUserRoles(string memory _userType) public pure returns (Role) {
-        // Convert user type to lowercase for case-insensitive comparison
         bytes32 userType = keccak256(abi.encodePacked(_userType));
-
-        // Assign roles based on user type
         if (userType == keccak256(abi.encodePacked("faculty"))) {
             return Role.Faculty;
         } else {
@@ -23,7 +17,6 @@ contract BShiksha {
         }
     }
 
-    // Stores Posts
     uint256 public PostCount = 0;
     mapping(uint256 => Post) public Posts;
 
@@ -36,10 +29,8 @@ contract BShiksha {
         address payable author;
     }
 
-    // Array to store all posts
     Post[] public posts;
 
-    // Modifier to restrict functions to faculty members only
     modifier onlyFacultyMember() {
         require(
             userRoles[msg.sender] == Role.Faculty,
@@ -48,7 +39,6 @@ contract BShiksha {
         _;
     }
 
-    // creating an event for Post uploading
     event PostCreated(
         uint256 id,
         string hash,
@@ -58,13 +48,13 @@ contract BShiksha {
         address payable author
     );
 
-    // creating an event for Post tipping
     event PostTipped(
         uint256 id,
         string hash,
         string description,
         uint256 tipAmount,
         uint256 viewCost,
+<<<<<<< HEAD
         address payable author
     );
 
@@ -79,16 +69,35 @@ contract BShiksha {
 
     // create Posts
     function uploadPost (
+=======
+        address payable author
+    );
+
+    event PostViewed(
+        uint256 id,
+        string hash,
+        string description,
+        uint256 tipAmount,
+        uint256 viewCost,
+        address payable author
+    );
+
+    function uploadPost (
+        uint256 _postId,
+>>>>>>> 595e86bf7261e6a3200b844456c96591599cf142
         string memory _PostHash,
         string memory _description,
         uint256 _viewCost
     ) public onlyFacultyMember returns (uint256) {
+<<<<<<< HEAD
         // Makes sure Post hash exists
+=======
+>>>>>>> 595e86bf7261e6a3200b844456c96591599cf142
         require(bytes(_PostHash).length > 0);
-
-        // Makes sure Post description exists
         require(bytes(_description).length > 0);
+        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
 
+<<<<<<< HEAD
         // uint256 value = 18 - _exp;
         // _viewCost = (_viewCost * 1e18) / value;
 
@@ -97,11 +106,12 @@ contract BShiksha {
         require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18 , "Maximum viewing cost must be between 0.03 ETH and 0.07 ETH");
 
         // Increment Post count
+=======
+>>>>>>> 595e86bf7261e6a3200b844456c96591599cf142
         PostCount++;
 
-        // Add Post to contract
-        Posts[PostCount] = Post(
-            PostCount,
+        Posts[_postId] = Post(
+            _postId,
             _PostHash,
             _description,
             0,
@@ -109,10 +119,13 @@ contract BShiksha {
             payable(msg.sender)
         );
 
+<<<<<<< HEAD
 
         // Trigger the event
+=======
+>>>>>>> 595e86bf7261e6a3200b844456c96591599cf142
         emit PostCreated(
-            PostCount,
+            _postId,
             _PostHash,
             _description,
             0,
@@ -123,21 +136,11 @@ contract BShiksha {
         return PostCount;
     }
 
-    // Tip Posts
     function tipPostOwner(uint256 _id) public payable {
-        // Validating the Post
-        require(_id > 0 && _id <= PostCount);
-
-        // Fetching the author of Post/post
+        require(_id >= 0 && _id <= PostCount);
         address payable _author = Posts[_id].author;
-
-        // Paying the author
         _author.transfer(msg.value);
-
-        // Increment the tip amount
         Posts[_id].tipAmount += msg.value;
-
-        // Trigger event when a Post is tipped
         emit PostTipped(
             _id,
             Posts[_id].hash,
@@ -154,6 +157,7 @@ contract BShiksha {
     }
 
     function viewPost(uint256 _postId) public payable {
+<<<<<<< HEAD
         // Validating the Post
         require(_postId > 0 && _postId <= PostCount);
 
@@ -168,6 +172,12 @@ contract BShiksha {
         sendViaCall(payable(address(post.author)), msg.value);
 
         // Emit event for post view
+=======
+        require(_postId >= 0 && _postId <= PostCount);
+        Post memory post = Posts[_postId];
+        require(msg.value >= post.viewCost, "Insufficient payment to view the post");
+        sendViaCall(payable(address(post.author)), msg.value);
+>>>>>>> 595e86bf7261e6a3200b844456c96591599cf142
         emit PostViewed(
             _postId,
             post.hash,
@@ -182,4 +192,8 @@ contract BShiksha {
         (bool sent, ) = _to.call{value: _amount}("");
         require(sent, "Failed to send Ether");
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 595e86bf7261e6a3200b844456c96591599cf142

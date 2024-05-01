@@ -277,6 +277,11 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "_postId",
+          "type": "uint256"
+        },
+        {
           "internalType": "string",
           "name": "_PostHash",
           "type": "string"
@@ -2175,7 +2180,7 @@
                           {
                             "name": "value",
                             "nodeType": "YulIdentifier",
-                            "src": "2770:5:1"
+                            "src": "3061:5:1"
                           }
                         ],
                         "functionName": {
@@ -9406,18 +9411,18 @@
                 "id": 2,
                 "name": "Faculty",
                 "nodeType": "EnumValue",
-                "src": "143:7:0"
+                "src": "106:7:0"
               },
               {
                 "id": 3,
                 "name": "Viewer",
                 "nodeType": "EnumValue",
-                "src": "161:6:0"
+                "src": "124:6:0"
               }
             ],
             "name": "Role",
             "nodeType": "EnumDefinition",
-            "src": "122:52:0"
+            "src": "85:52:0"
           },
           {
             "constant": false,
@@ -9440,14 +9445,14 @@
                 "id": 5,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
-                "src": "246:7:0",
+                "src": "151:7:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_address",
                   "typeString": "address"
                 }
               },
               "nodeType": "Mapping",
-              "src": "238:24:0",
+              "src": "143:24:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_enum$_Role_$4_$",
                 "typeString": "mapping(address => enum BShiksha.Role)"
@@ -9460,10 +9465,10 @@
                   "name": "Role",
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 4,
-                  "src": "257:4:0"
+                  "src": "162:4:0"
                 },
                 "referencedDeclaration": 4,
-                "src": "257:4:0",
+                "src": "162:4:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_enum$_Role_$4",
                   "typeString": "enum BShiksha.Role"
@@ -9476,7 +9481,7 @@
             "body": {
               "id": 43,
               "nodeType": "Block",
-              "src": "365:360:0",
+              "src": "270:239:0",
               "statements": [
                 {
                   "assignments": [
@@ -9490,7 +9495,7 @@
                       "name": "userType",
                       "nodeType": "VariableDeclaration",
                       "scope": 43,
-                      "src": "451:16:0",
+                      "src": "281:16:0",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -9501,7 +9506,7 @@
                         "id": 17,
                         "name": "bytes32",
                         "nodeType": "ElementaryTypeName",
-                        "src": "451:7:0",
+                        "src": "281:7:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -9521,7 +9526,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 11,
-                            "src": "497:9:0",
+                            "src": "327:9:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_memory_ptr",
                               "typeString": "string memory"
@@ -9541,7 +9546,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4294967295,
-                            "src": "480:3:0",
+                            "src": "310:3:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_abi",
                               "typeString": "abi"
@@ -9554,7 +9559,7 @@
                           "lValueRequested": false,
                           "memberName": "encodePacked",
                           "nodeType": "MemberAccess",
-                          "src": "480:16:0",
+                          "src": "310:16:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_abiencodepacked_pure$__$returns$_t_bytes_memory_ptr_$",
                             "typeString": "function () pure returns (bytes memory)"
@@ -9568,7 +9573,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "480:27:0",
+                        "src": "310:27:0",
                         "tryCall": false,
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
@@ -9588,7 +9593,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 4294967288,
-                      "src": "470:9:0",
+                      "src": "300:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
                         "typeString": "function (bytes memory) pure returns (bytes32)"
@@ -9602,7 +9607,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "470:38:0",
+                    "src": "300:38:0",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
@@ -9610,7 +9615,7 @@
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "451:57:0"
+                  "src": "281:57:0"
                 },
                 {
                   "condition": {
@@ -9629,7 +9634,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 18,
-                      "src": "569:8:0",
+                      "src": "353:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
@@ -9650,7 +9655,7 @@
                               "kind": "string",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "608:9:0",
+                              "src": "392:9:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_e41ebea2e7623d5f55a7b4d667be91e1dc447774b774ed21cf96f281b20d20cb",
                                 "typeString": "literal_string \"faculty\""
@@ -9671,7 +9676,7 @@
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 4294967295,
-                              "src": "591:3:0",
+                              "src": "375:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_abi",
                                 "typeString": "abi"
@@ -9684,7 +9689,7 @@
                             "lValueRequested": false,
                             "memberName": "encodePacked",
                             "nodeType": "MemberAccess",
-                            "src": "591:16:0",
+                            "src": "375:16:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_abiencodepacked_pure$__$returns$_t_bytes_memory_ptr_$",
                               "typeString": "function () pure returns (bytes memory)"
@@ -9698,7 +9703,7 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "591:27:0",
+                          "src": "375:27:0",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_bytes_memory_ptr",
@@ -9718,7 +9723,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 4294967288,
-                        "src": "581:9:0",
+                        "src": "365:9:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
                           "typeString": "function (bytes memory) pure returns (bytes32)"
@@ -9732,14 +9737,14 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "581:38:0",
+                      "src": "365:38:0",
                       "tryCall": false,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "src": "569:50:0",
+                    "src": "353:50:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -9748,7 +9753,7 @@
                   "falseBody": {
                     "id": 41,
                     "nodeType": "Block",
-                    "src": "673:45:0",
+                    "src": "457:45:0",
                     "statements": [
                       {
                         "expression": {
@@ -9758,7 +9763,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4,
-                            "src": "695:4:0",
+                            "src": "479:4:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_type$_t_enum$_Role_$4_$",
                               "typeString": "type(enum BShiksha.Role)"
@@ -9771,7 +9776,7 @@
                           "lValueRequested": false,
                           "memberName": "Viewer",
                           "nodeType": "MemberAccess",
-                          "src": "695:11:0",
+                          "src": "479:11:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_enum$_Role_$4",
                             "typeString": "enum BShiksha.Role"
@@ -9780,17 +9785,17 @@
                         "functionReturnParameters": 16,
                         "id": 40,
                         "nodeType": "Return",
-                        "src": "688:18:0"
+                        "src": "472:18:0"
                       }
                     ]
                   },
                   "id": 42,
                   "nodeType": "IfStatement",
-                  "src": "565:153:0",
+                  "src": "349:153:0",
                   "trueBody": {
                     "id": 37,
                     "nodeType": "Block",
-                    "src": "621:46:0",
+                    "src": "405:46:0",
                     "statements": [
                       {
                         "expression": {
@@ -9800,7 +9805,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4,
-                            "src": "643:4:0",
+                            "src": "427:4:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_type$_t_enum$_Role_$4_$",
                               "typeString": "type(enum BShiksha.Role)"
@@ -9813,7 +9818,7 @@
                           "lValueRequested": false,
                           "memberName": "Faculty",
                           "nodeType": "MemberAccess",
-                          "src": "643:12:0",
+                          "src": "427:12:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_enum$_Role_$4",
                             "typeString": "enum BShiksha.Role"
@@ -9822,7 +9827,7 @@
                         "functionReturnParameters": 16,
                         "id": 36,
                         "nodeType": "Return",
-                        "src": "636:19:0"
+                        "src": "420:19:0"
                       }
                     ]
                   }
@@ -9847,7 +9852,7 @@
                   "name": "_userType",
                   "nodeType": "VariableDeclaration",
                   "scope": 44,
-                  "src": "313:23:0",
+                  "src": "218:23:0",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -9858,7 +9863,7 @@
                     "id": 10,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "313:6:0",
+                    "src": "218:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -9867,7 +9872,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "312:25:0"
+              "src": "217:25:0"
             },
             "returnParameters": {
               "id": 16,
@@ -9880,7 +9885,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 44,
-                  "src": "359:4:0",
+                  "src": "264:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -9895,10 +9900,10 @@
                       "name": "Role",
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 4,
-                      "src": "359:4:0"
+                      "src": "264:4:0"
                     },
                     "referencedDeclaration": 4,
-                    "src": "359:4:0",
+                    "src": "264:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_enum$_Role_$4",
                       "typeString": "enum BShiksha.Role"
@@ -9907,7 +9912,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "358:6:0"
+              "src": "263:6:0"
             },
             "scope": 388,
             "src": "288:437:0",
@@ -9934,7 +9939,7 @@
               "id": 45,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "754:7:0",
+              "src": "517:7:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -9949,7 +9954,7 @@
               "kind": "number",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "781:1:0",
+              "src": "544:1:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_rational_0_by_1",
                 "typeString": "int_const 0"
@@ -9979,14 +9984,14 @@
                 "id": 48,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "797:7:0",
+                "src": "560:7:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "789:24:0",
+              "src": "552:24:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Post_$65_storage_$",
                 "typeString": "mapping(uint256 => struct BShiksha.Post)"
@@ -10033,7 +10038,7 @@
                   "id": 53,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "858:7:0",
+                  "src": "621:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -10059,7 +10064,7 @@
                   "id": 55,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "879:6:0",
+                  "src": "642:6:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -10085,7 +10090,7 @@
                   "id": 57,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "901:6:0",
+                  "src": "664:6:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -10111,7 +10116,7 @@
                   "id": 59,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "930:7:0",
+                  "src": "693:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -12129,7 +12134,7 @@
                             }
                           },
                           "nodeType": "BinaryOperation",
-                          "operator": ">",
+                          "operator": ">=",
                           "rightExpression": {
                             "hexValue": "30",
                             "id": 215,

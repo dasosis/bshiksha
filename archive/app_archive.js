@@ -18,6 +18,7 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
             console.error("No file selected");
             return;
         }
+        formData.append("value", document.getElementById("value").value);
 
         const response = await fetch("/submit", {
             method: "POST",
@@ -28,35 +29,59 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
         console.error(error);
     }
 
-    // console.log(responseData);
-
-    //web3
+    console.log("Fetch Data from Server...", responseData);
     if (typeof window.ethereum !== "undefined") {
         const web3 = new Web3(window.ethereum);
         try {
             const currentAccount = await connectAccount();
-            const { contractInstance } = await getContract(web3);
-            const txnHash = await uploadPostToBlock(
+            const contractArtifact = await getContractArtifact();
+            const { contractInstance } = await getcontractInstance(
+                web3,
+                contractArtifact
+            );
+            await uploadPostToBlock(
                 web3,
                 contractInstance,
-                currentAccount,
+                currentAccount[0],
                 responseData
             );
-            await fetchPostDetails(web3, contractInstance.abi, txnHash);
+            const postDetails = await getPost(contractInstance, responseData.postId);
+            await sendPostFee(contractInstance, currentAccount[1], postDetails);
+            
         } catch (error) {
-            console.error("Error:", error);
+            console.log(error);
         }
     } else {
         console.log("MetaMask is not installed");
     }
 });
 
+async function sendPostFee(contractInstance, currentAccount, postDetails){
+    const viewCostWei = postDetails.viewCost;
+    const postId = postDetails.id;
+    const txReceipt = await contractInstance.methods.viewPost(postId).send({
+        from: currentAccount,
+        value: viewCostWei,
+    });
+}
+
+async function getPost(contractInstance, postId) {
+    try {
+        console.log("Post Id in GetPost - ",postId);
+        const postDetails = await contractInstance.methods.getPost(postId).call();
+        console.log("Post Call - ", postDetails);
+        return postDetails;
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
 async function connectAccount() {
     try {
         const accounts = await window.ethereum.request({
             method: "eth_requestAccounts",
         });
-        const currentAccount = accounts[0];
+        const currentAccount = accounts;
         console.log("Connected wallet address:", currentAccount);
         return currentAccount;
     } catch (error) {
@@ -65,7 +90,7 @@ async function connectAccount() {
     }
 }
 
-async function getContract(web3) {
+async function getContractArtifact() {
     try {
         const response = await fetch("/BShiksha.json");
         if (!response.ok) {
@@ -73,12 +98,19 @@ async function getContract(web3) {
         }
         const json = await response.text();
         const contractArtifact = JSON.parse(json);
+        return contractArtifact;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getcontractInstance(web3, contractArtifact) {
+    try {
         const abi = contractArtifact.abi;
         const deployment = Object.keys(contractArtifact.networks);
-        console.log(contractArtifact.networks);
         const address =
             contractArtifact.networks[deployment[deployment.length - 1]];
-        console.log(address.address);
+        console.log("Contract Address", address.address);
         const contractInstance = new web3.eth.Contract(abi, address.address);
         const networkId = await web3.eth.net.getId();
         return { contractInstance };
@@ -95,10 +127,17 @@ async function uploadPostToBlock(
     postData
 ) {
     try {
+        const valueinWei = web3.utils
+            .toWei(postData.value.toString(), "ether")
+            .toString();
+        console.log(valueinWei);
         const transaction = contractInstance.methods.uploadPost(
-            postData.title,
-            postData.cid
+            postData.postId,
+            postData.cid,
+            postData.description,
+            valueinWei
         );
+        console.log("PostData Id = " + postData.postId);
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
         const gasPrice = await web3.eth.getGasPrice();
         const data = transaction.encodeABI();
@@ -111,59 +150,15 @@ async function uploadPostToBlock(
             gasPrice: gasPrice,
             data: data,
         };
-        console.log(txObject);
-        const txnHash = await window.ethereum.request({
+        console.log("Sending...", txObject);
+        const TxHash = await window.ethereum.request({
             method: "eth_sendTransaction",
             params: [txObject],
         });
-        console.log("txnHash = " + txnHash);
-        // uploadToSQL(txnHash)
-        return txnHash;
+        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
+        console.log("Successful Upload!! ", TxReciept);
     } catch (error) {
         console.error("Error uploading post:", error);
         throw error;
     }
-}
-
-async function fetchPostDetails(web3, abi, transactionHash) {
-    const transactionReceipt = await web3.eth.getTransactionReceipt(
-        transactionHash
-    );
-    console.log(transactionReceipt);
-    if (!transactionReceipt) {
-        console.error('Transaction receipt not found');
-        return;
-    }
-    const eventSignature = web3.utils.keccak256('PostCreated(uint256,string,string,uint256,address)');
-    const event = transactionReceipt.logs.find(log => log.topics[0] === eventSignature);
-
-    if (!event) {
-        console.error('PostUploaded event not found in the transaction logs');
-        return;
-    }
-    console.log("event = " + event)
-
-    const decodedData = abi.decodeLog(
-        [
-            { type: 'uint256', name: 'id', indexed: false },
-            { type: 'string', name: 'hash', indexed: false },
-            { type: 'string', name: 'description', indexed: false },
-            { type: 'uint256', name: 'tipAmount', indexed: false },
-            { type: 'address payable', name: 'author', indexed: false }
-        ],
-        event.data,
-        event.topics.slice(1) // Remove the first topic (signature)
-    );
-
-    const id = decodedData.id;
-    const ipfsHash = decodedData.hash;
-    const description = decodedData.description;
-    const tipAmount = decodedData.tipAmount;
-    const author = decodedData.author;
-
-    console.log('Post ID:', id);
-    console.log('IPFS Hash:', ipfsHash);
-    console.log('Description:', description);
-    console.log('Description:', tipAmount);
-    console.log('Description:', author);
 }

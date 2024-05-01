@@ -43,7 +43,7 @@ async function uploadFileToIPFS(fileData) {
         const { cid } = await client.add(fileData);
         return { cid };
     } catch (error) {
-        console.error('Error uploading file:', error);
+        console.error(error);
     }
 }
 
