@@ -4,9 +4,25 @@ import CommentView from '../components/CommentView/CommentView';
 import Upload from '../components/Upload/Upload';
 
 import { useRender } from '../renderDataStore';
+import { useStore } from '../dataStore';
+import { useEffect } from 'react';
 
 const Home = () => {
   const pageRender = useRender((state) => state.pageRender);
+  const currentAccount = useStore((state) => state.currentAccount);
+  const setCurrentAccount = useStore((state) => state.setCurrentAccount);
+
+  const metaMaskConnect = async () => {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      console.log('Connected wallet address:', accounts);
+      setCurrentAccount(accounts[0]);
+  };
+
+  metaMaskConnect()
+
+  console.log(currentAccount)
   return (
     <div
       className='Home'

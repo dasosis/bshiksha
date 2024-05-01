@@ -6,7 +6,7 @@ export var currentAccount;
 export async function connectAccount() {
   try {
     const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts',
+      method: '`eth_requestAccounts`',
     });
     const currentAccount = accounts;
     console.log('Connected wallet address:', currentAccount);

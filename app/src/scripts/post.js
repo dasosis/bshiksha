@@ -3,7 +3,7 @@ import { uploadPost_block, callPostCount_block, callPost_block } from "./block.j
 export async function submitPost(currentAccount,responseData){
     const postId = await callPostCount_block();
     const success_post = await uploadPost_block(
-        currentAccount[0],
+        currentAccount,
         responseData,
         postId
     );

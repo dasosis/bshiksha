@@ -14,6 +14,7 @@
     "@metamask/detect-provider": "^2.0.0",
     "body-parser": "^1.20.2",
     "copy-webpack-plugin": "^12.0.2",
+    "cors": "^2.8.5",
     "ethers": "^6.12.0",
     "express": "^4.19.2",
     "kubo-rpc-client": "^4.0.1",

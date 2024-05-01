@@ -16,7 +16,7 @@ const Navbar = () => {
           Profile
         </div>
         <div className={'nav-link' + (activeTab == 2 ? ' selected' : '')} onClick={() => setActiveTab(2)}>
-          Profile
+          Upload
         </div>
       </div>
     </div>

@@ -2,12 +2,13 @@ import { web3 } from "./metamask.js";
 
 export async function getContractArtifact() {
     try {
-        const response = await fetch("/BShiksha.json");
+        const response = await fetch("http://localhost:3000/BShiksha.json");
         if (!response.ok) {
             throw new Error("Failed to fetch contract artifact");
         }
-        const json = await response.text();
-        const contractArtifact = JSON.parse(json);
+        // const json = await response.text();
+        const contractArtifact = await response.json();
+        // const contractArtifact = JSON.parse(json);
         return contractArtifact;
     } catch (error) {
         console.log(error);

@@ -1,0 +1,22 @@
+import { detect } from '@metamask/detect-provider';
+         ^^^^^^
+SyntaxError: Named export 'detect' not found. The requested module '@metamask/detect-provider' is a CommonJS module, which may not support all module.exports as named exports.
+CommonJS modules can always be imported via the default export, for example using:
+
+import pkg from '@metamask/detect-provider';
+const { detect } = pkg;
+
+
+
+
+
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+Error detecting MetaMask provider: TypeError: detectProvider.detect is not a function
+    at file:///D:/coding/blockchain/new/bshiksha/app/src/app.js:22:47
+    at file:///D:/coding/blockchain/new/bshiksha/app/src/app.js:31:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:222:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:323:24)
+    at async loadESM (node:internal/process/esm_loader:28:7)
+    at async handleMainPromise (node:internal/modules/run_main:113:12)
+    

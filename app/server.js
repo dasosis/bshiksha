@@ -3,6 +3,7 @@ import path from 'path';
 import pkg from 'body-parser';
 import multer from 'multer';
 import { create } from 'kubo-rpc-client';
+import cors from 'cors';
 
 const { urlencoded } = pkg;
 const app = express();
@@ -10,6 +11,7 @@ const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
 
+app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
 app.use(express.static(path.join(directoryPath, '../build/contracts')));

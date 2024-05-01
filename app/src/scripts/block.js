@@ -28,10 +28,12 @@ export async function uploadPost_block(
             data: data,
         };
         console.log("Sending...", txObject);
+        console.log(window);
         const TxHash = await window.ethereum.request({
             method: "eth_sendTransaction",
             params: [txObject],
         });
+        console.log("test")
         const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
         console.log("Successful Upload!! ", TxReciept);
         if(TxReciept){
