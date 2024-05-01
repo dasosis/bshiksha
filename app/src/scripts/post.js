@@ -1,15 +1,23 @@
-import { getContractArtifact, getcontractInstance } from "./contract.js";
-import { uploadPostToBlock, getPostId } from "./block.js";
+import { uploadPost_block, callPostCount_block, callPost_block } from "./block.js";
 
 export async function submitPost(currentAccount,responseData){
-    const contractArtifact = await getContractArtifact();
-    const {contractInstance} = await getcontractInstance(contractArtifact);
-    console.log("contract instance = ", contractInstance);
-    const postId = await getPostId();
-    const success_post = await uploadPostToBlock(
+    const postId = await callPostCount_block();
+    const success_post = await uploadPost_block(
         currentAccount[0],
         responseData,
         postId
     );
     return success_post;
+}
+
+export async function getPost(postId){
+    console.log("PostId in getPost = ",postId);
+    const postDetails = await callPost_block(postId);
+    console.log(postDetails);
+}
+
+export async function getFeed(){
+    const postCount = await callPostCount_block();
+    console.log(postCount);
+    return postCount;
 }

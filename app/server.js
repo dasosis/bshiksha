@@ -28,7 +28,6 @@ app.post('/submit', upload.single('file'), async (req, res) => {
             description,
             cid: cid.toString(),
             value,
-            postId
         };
         res.json(responseData);
     } catch (err) {

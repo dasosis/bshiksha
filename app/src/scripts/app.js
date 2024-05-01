@@ -1,9 +1,10 @@
 import { connectAccount} from './metamask.js';
-import { submitPost } from './post.js';
+import { submitPost, getFeed, getPost } from './post.js';
 
 var responseData;
 var currentAccount = await connectAccount();
 var success_flag;
+var postCount;
 
 // document.getElementById('connect_wallet').addEventListener('click', async (event) => {
 //     event.preventDefault;
@@ -23,10 +24,7 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
         const formData = new FormData();
 
         formData.append("title", document.getElementById("title").value);
-        formData.append(
-            "description",
-            document.getElementById("description").value
-        );
+        formData.append("description", document.getElementById("description").value);
 
         const fileInput = document.getElementById("file");
         if (fileInput.files.length > 0) {
@@ -49,6 +47,25 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
     console.log("Fetch Data from Server...", responseData);
     success_flag = await submitPost(currentAccount,responseData);
 });
+
+document.getElementById("feed_button").addEventListener("click", async(event) => {
+    event.preventDefault();
+    console.log("Inside Feed");
+    postCount = await getFeed();
+});
+
+var buttonContainer = document.getElementById("buttonContainer");
+for (var i = 0; i < postCount; i++) {
+    var button = document.createElement("button");
+    button.textContent = i;
+    button.id = (i + 1);
+    buttonContainer.appendChild(button);
+    button.addEventListener("click", async(event) => {
+        event.preventDefault();
+        console.log(button.id);
+        const postDetails = await getPost(button.id);            
+    });
+}
 
 
 
