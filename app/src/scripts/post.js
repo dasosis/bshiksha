@@ -37,6 +37,7 @@ async function getPostForFeed(postId) {
 
 export async function viewPostInFeedTab(currentAccount) {
     const postCount = await callPostCount_block();
+    var payment_flag;
     for (let i = 0; i < postCount; i++) {
         const post = await getPostForFeed(i);
         const postDiv = document.createElement("div");
@@ -57,7 +58,9 @@ export async function viewPostInFeedTab(currentAccount) {
         button.id = `button${post.id}`;
         button.addEventListener('click',async () => {
             console.log(post.id);
-            await sendPostFee_block(currentAccount[0],post);
+            payment_flag = await sendPostFee_block(currentAccount[0],post);
+            if(payment_flag)
+            window.open(`http://localhost:8080/ipfs/${post.hash}`);
         });
         postDiv.appendChild(button);
         document.getElementById("feed-container").appendChild(postDiv);

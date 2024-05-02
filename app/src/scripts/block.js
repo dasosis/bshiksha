@@ -29,15 +29,14 @@ export async function uploadPost_block(
             data: data,
         };
         console.log("Sending...", txObject);
-        const TxHash = await window.ethereum.request({
+        const txHash = await window.ethereum.request({
             method: "eth_sendTransaction",
             params: [txObject],
         });
-        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
-        console.log("Successful Upload!! ", TxReciept);
-        if(TxReciept){
-            return 1;
-        } else return 0;
+        const txReceipt = await web3.eth.getTransactionReceipt(txHash);
+        console.log("Successful Upload!! ", txReceipt);
+        if(txReceipt) return 1;
+        else return 0;
     } catch (error) {
         console.error("Error uploading post:", error);
         throw error;
@@ -64,6 +63,8 @@ export async function sendPostFee_block(currentAccount, postDetails){
         from: currentAccount,
         value: viewCostWei,
     });
+    if(txReceipt) return 1;
+    else return 0;
 }
 
 export async function callPostCount_block() {
@@ -98,9 +99,9 @@ export async function signUpUser_block(currentAccount, userData) {
             method: "eth_sendTransaction",
             params: [txObject],
         });
-        const TxReciept = await web3.eth.getTransactionReceipt(TxHash);
-        console.log("Successfully Signed Up!! ", TxReciept);
-        if(TxReciept){
+        const TxReceipt = await web3.eth.getTransactionReceipt(TxHash);
+        console.log("Successfully Signed Up!! ", TxReceipt);
+        if(TxReceipt){
             return 1;
         } else return 0;
     } catch (error) {
