@@ -13,3 +13,24 @@ export function clear() {
     b_feed.classList.remove("pressed");
     b_profile.classList.remove("pressed");
 }
+
+export function createPostBlockForFeed(post) {
+    const postDiv = document.createElement("div");
+    postDiv.classList.add("post");
+    postDiv.style.border = "1px solid black";
+    postDiv.style.marginBottom = "10px";
+
+    const title = document.createElement("h3");
+    title.textContent = post.title;
+    postDiv.appendChild(title);
+
+    const description = document.createElement("p");
+    description.textContent = post.description;
+    postDiv.appendChild(description);
+
+    const button = document.createElement("button");
+    button.innerText = `View Cost: ${post.viewCost}`;
+    postDiv.appendChild(button);
+
+    document.getElementById("feed-container").appendChild(postDiv);
+}

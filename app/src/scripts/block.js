@@ -68,7 +68,6 @@ export async function sendPostFee_block(currentAccount, postDetails){
 export async function callPostCount_block() {
     const {contractInstance} = await getcontractInstance();
     const postCount = await contractInstance.methods.PostCount().call();
-    console.log("post count = ",postCount);
     return postCount;
 }
 
