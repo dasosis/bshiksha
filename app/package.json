@@ -18,6 +18,7 @@
     "express": "^4.19.2",
     "kubo-rpc-client": "^4.0.1",
     "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.0",
     "path": "^0.12.7",
     "web3": "^4.8.0",
     "webpack": "^5.91.0",
