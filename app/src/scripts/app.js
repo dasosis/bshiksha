@@ -1,5 +1,5 @@
 import { connectAccount } from './metamask.js';
-import { submitPost, getFeed, getPost, signup, viewPostInFeedTab } from './post.js';
+import { submitPost, getFeed, getPost, viewPostInFeedTab } from './post.js';
 import { clear, b_post, b_feed, b_profile } from './utility.js';
 
 var responseData;
@@ -22,7 +22,7 @@ document.getElementById("feed-button").addEventListener('click', async (event) =
     clear();
     document.getElementById('feed-container').style.display = "block";
     b_feed.classList.add("pressed");
-    await viewPostInFeedTab();
+    await viewPostInFeedTab(currentAccount);
 });
 document.getElementById("profile-button").addEventListener('click', async (event) => {
     event.preventDefault();

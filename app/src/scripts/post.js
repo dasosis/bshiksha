@@ -2,12 +2,8 @@ import {
     uploadPost_block,
     callPostCount_block,
     callPost_block,
-    signUpUser_block,
+    sendPostFee_block
 } from "./block.js";
-
-import{
-    createPostBlockForFeed
-} from './utility.js';
 
 export async function submitPost(currentAccount, responseData) {
     const postId = await callPostCount_block();
@@ -39,10 +35,31 @@ async function getPostForFeed(postId) {
     return postDetails;
 }
 
-export async function viewPostInFeedTab() {
+export async function viewPostInFeedTab(currentAccount) {
     const postCount = await callPostCount_block();
     for (let i = 0; i < postCount; i++) {
         const post = await getPostForFeed(i);
-        const post_id = createPostBlockForFeed(post);
+        const postDiv = document.createElement("div");
+        postDiv.classList.add("post");
+        postDiv.style.border = "1px solid black";
+        postDiv.style.marginBottom = "10px";
+    
+        const title = document.createElement("h3");
+        title.textContent = post.title;
+        postDiv.appendChild(title);
+    
+        const description = document.createElement("p");
+        description.textContent = post.description;
+        postDiv.appendChild(description);
+    
+        const button = document.createElement("button");
+        button.innerText = `View Cost: ${post.viewCost}`;
+        button.id = `button${post.id}`;
+        button.addEventListener('click',async () => {
+            console.log(post.id);
+            await sendPostFee_block(currentAccount[0],post);
+        });
+        postDiv.appendChild(button);
+        document.getElementById("feed-container").appendChild(postDiv);
     }
 }
