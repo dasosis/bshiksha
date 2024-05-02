@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="buttonContainer">
+        <button id="login-button">Login</button>
+        <button id="signup-button">SignUp</button>
+    </div>
+    <div id="signup-container" class="form-container">
+        <h2>Sign Up Form</h2>
+        <form id="signup-form" action="/signup" method="POST">
+            <div class="form-group">
+                <label for="userName">User Name:</label>
+                <input type="text" id="userName" name="userName">
+            </div>
+            <div class="form-group">
+                <label for="userEmail">Email:</label>
+                <input type="email" id="userEmail" name="userEmail">
+            </div>
+            <div class="form-group">
+                <label for="isProfessor">Are you a professor?</label>
+                <input type="checkbox" id="isProfessor" name="isProfessor">
+            </div>
+            <div class="form-group">
+                <label for="universityName">University Name:</label>
+                <input type="text" id="universityName" name="universityName">
+            </div>
+            <div class="form-group">
+                <button type="submit">Sign Up</button>
+            </div>
+        </form>
+    </div>
+    <div id="login-container" class="form-container">
+        <h2>login</h2>
+            </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <!-- <script type="module" src="/scripts/app.js"></script> -->
+    <script type="module" src="/scripts/login.js"></script>
+    
+    
+
+</body>
+
+</html>
