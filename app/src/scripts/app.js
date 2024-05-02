@@ -1,5 +1,5 @@
 import { connectAccount } from './metamask.js';
-import { submitPost, getFeed, getPost, signup } from './post.js';
+import { submitPost, getFeed, getPost, signup, viewPostInFeedTab } from './post.js';
 import { clear, b_post, b_feed, b_profile } from './utility.js';
 
 var responseData;
@@ -9,22 +9,22 @@ var postCount;
 
 
 
-document.getElementById("post-button").addEventListener('click', (event) => {
+document.getElementById("post-button").addEventListener('click', async (event) => {
     event.preventDefault();
     clear();
     document.getElementById('post-container').style.display = "block";
     b_post.classList.add("pressed");
     console.log("hello post button");
 });
-document.getElementById("feed-button").addEventListener('click', (event) => {
+document.getElementById("feed-button").addEventListener('click', async (event) => {
     event.preventDefault();
     console.log("hello feed button");
     clear();
     document.getElementById('feed-container').style.display = "block";
     b_feed.classList.add("pressed");
-    getPosts();
+    await viewPostInFeedTab();
 });
-document.getElementById("profile-button").addEventListener('click', (event) => {
+document.getElementById("profile-button").addEventListener('click', async (event) => {
     event.preventDefault();
     console.log("hello profile button");
     clear();
