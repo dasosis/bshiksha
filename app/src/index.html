@@ -9,7 +9,13 @@
 </head>
 
 <body>
-    <div class="form-container">
+    <div class="buttonContainer">
+        <button id="post-button">Post</button>
+        <button id="feed-button">Feed</button>
+        <button id="profile-button">Profile</button>
+    </div>
+
+    <div class="form-container" id="post-container">
         <h2>Submit Form</h2>
         <form id="myForm" enctype="multipart/form-data">
             <div class="form-group">
@@ -32,41 +38,66 @@
                 <button type="submit">Submit</button>
             </div>
         </form>
-        <div>
-            <button id="feed_button">Feed</button>
-        </div>
-        <div>
-            <button id="view_button">View</button>
-        </div>
-        <div>
-            <button id="connect_wallet">Connect Wallet</button>
-        </div>
-        <div id="buttonContainer"></div>
     </div>
-    <div class="form-container">
-        <h2>Sign Up Form</h2>
-        <form id="signup">
-            <div class="form-group">
-                <label for="userName">User Name:</label>
-                <input type="text" id="userName" name="userName">
-            </div>
-            <div class="form-group">
-                <label for="userEmail">Email:</label>
-                <input type="email" id="userEmail" name="userEmail">
-            </div>
-            <div class="form-group">
-                <label for="isProfessor">Are you a professor?</label>
-                <input type="checkbox" id="isProfessor" name="isProfessor">
-            </div>
-            <div class="form-group">
-                <label for="universityName">University Name:</label>
-                <input type="text" id="universityName" name="universityName">
-            </div>
-            <div class="form-group">
-                <button type="submit">Sign Up</button>
-            </div>
-        </form>
+
+    <div id="feed-container">
+        feedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeedfeed
+        <div class="login-container">
+            <h2>Sign Up Form</h2>
+            <form id="signup">
+                <div class="form-group">
+                    <label for="userName">User Name:</label>
+                    <input type="text" id="userName" name="userName">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email:</label>
+                    <input type="email" id="userEmail" name="userEmail">
+                </div>
+                <div class="form-group">
+                    <label for="isProfessor">Are you a professor?</label>
+                    <input type="checkbox" id="isProfessor" name="isProfessor">
+                </div>
+                <div class="form-group">
+                    <label for="universityName">University Name:</label>
+                    <input type="text" id="universityName" name="universityName">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
     </div>
+    <div id="profile-container">
+        <div class="login-container">
+            <h2>Sign Up Form</h2>
+            <form id="signup">
+                <div class="form-group">
+                    <label for="userName">User Name:</label>
+                    <input type="text" id="userName" name="userName">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email:</label>
+                    <input type="email" id="userEmail" name="userEmail">
+                </div>
+                <div class="form-group">
+                    <label for="isProfessor">Are you a professor?</label>
+                    <input type="checkbox" id="isProfessor" name="isProfessor">
+                </div>
+                <div class="form-group">
+                    <label for="universityName">University Name:</label>
+                    <input type="text" id="universityName" name="universityName">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    
+
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script type="module" src="/scripts/app.js"></script>
 
