@@ -29,10 +29,10 @@ export async function getFeed() {
     return postCount;
 }
 
-export async function signup(currentAccount, userData) {
-    const signup_flag = await signUpUser_block(currentAccount, userData);
-    return signup_flag;
-}
+// export async function signup(currentAccount, userData) {
+//     const signup_flag = await signUpUser_block(currentAccount, userData);
+//     return signup_flag;
+// }
 
 async function getPostForFeed(postId) {
     const postDetails = await callPost_block(postId);
@@ -41,15 +41,8 @@ async function getPostForFeed(postId) {
 
 export async function viewPostInFeedTab() {
     const postCount = await callPostCount_block();
-    const buttons = [];
     for (let i = 0; i < postCount; i++) {
         const post = await getPostForFeed(i);
-        const button = createPostBlockForFeed(post);
-        buttons.push(button);
+        const post_id = createPostBlockForFeed(post);
     }
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            console.log(button);
-        });
-    });
 }
