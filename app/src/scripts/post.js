@@ -62,6 +62,10 @@ export async function viewPostInFeedTab() {
         viewCost.textContent = `View Cost: ${post.viewCost}`;
         postDiv.appendChild(viewCost);
 
+        const button = document.createElement("button");
+        button.innerText = `View Cost: ${post.viewCost}`;
+        postDiv.appendChild(button);
+
         document.getElementById("feed-container").appendChild(postDiv);
     }
 }
