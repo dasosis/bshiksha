@@ -17,6 +17,7 @@ contract BShiksha {
 
     struct Post {
         uint256 id;
+        string title;
         string hash;
         string description;
         uint256 tipAmount;
@@ -36,6 +37,7 @@ contract BShiksha {
 
     event PostCreated(
         uint256 id,
+        string title,
         string hash,
         string description,
         uint256 tipAmount,
@@ -45,6 +47,7 @@ contract BShiksha {
 
     event PostTipped(
         uint256 id,
+        string title,
         string hash,
         string description,
         uint256 tipAmount,
@@ -63,20 +66,22 @@ contract BShiksha {
 
     function uploadPost (
         uint256 _postId,
-        string memory _PostHash,
-        string memory _description,
+        string memory _postTitle,
+        string memory _postHash,
+        string memory _postDescription,
         uint256 _viewCost
     ) public returns (uint256) {
-        require(bytes(_PostHash).length > 0);
-        require(bytes(_description).length > 0);
+        require(bytes(_postHash).length > 0);
+        require(bytes(_postDescription).length > 0);
         require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
 
         PostCount++;
 
         Posts[_postId] = Post(
             _postId,
-            _PostHash,
-            _description,
+            _postTitle,
+            _postHash,
+            _postDescription,
             0,
             _viewCost,
             payable(msg.sender)
@@ -84,8 +89,9 @@ contract BShiksha {
 
         emit PostCreated(
             _postId,
-            _PostHash,
-            _description,
+            _postTitle,
+            _postHash,
+            _postDescription,
             0,
             _viewCost,
             payable(msg.sender)
@@ -101,6 +107,7 @@ contract BShiksha {
         Posts[_id].tipAmount += msg.value;
         emit PostTipped(
             _id,
+            Posts[_id].title,
             Posts[_id].hash,
             Posts[_id].description,
             Posts[_id].tipAmount,
@@ -117,6 +124,9 @@ contract BShiksha {
     function viewPost(uint256 _postId) public payable {
         require(_postId >= 0 && _postId <= PostCount);
         Post memory post = Posts[_postId];
+        if(msg.sender == post.author) {
+            return;
+        }
         require(msg.value >= post.viewCost, "Insufficient payment to view the post");
         sendViaCall(payable(address(post.author)), msg.value);
         emit PostViewed(
