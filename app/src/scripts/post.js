@@ -41,8 +41,15 @@ async function getPostForFeed(postId) {
 
 export async function viewPostInFeedTab() {
     const postCount = await callPostCount_block();
+    const buttons = [];
     for (let i = 0; i < postCount; i++) {
         const post = await getPostForFeed(i);
-        createPostBlockForFeed(post);
+        const button = createPostBlockForFeed(post);
+        buttons.push(button);
     }
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            console.log(button);
+        });
+    });
 }

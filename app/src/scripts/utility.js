@@ -33,4 +33,5 @@ export function createPostBlockForFeed(post) {
     postDiv.appendChild(button);
 
     document.getElementById("feed-container").appendChild(postDiv);
+    // return button
 }
