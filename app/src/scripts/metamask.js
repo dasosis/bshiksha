@@ -1,5 +1,5 @@
 export const web3 = new Web3(window.ethereum);
-export var currentAccount;
+export var currentAccount = await connectAccount();
 
 export async function connectAccount() {
     try {

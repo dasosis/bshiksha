@@ -1,9 +1,8 @@
-import { connectAccount } from './metamask.js';
+import { currentAccount } from './metamask.js';
 import { submitPost, getFeed, getPost, viewPostInFeedTab } from './post.js';
 import { clear, b_post, b_feed, b_profile } from './utility.js';
 
 var responseData;
-var currentAccount = await connectAccount();
 var success_flag;
 var postCount;
 
@@ -34,23 +33,6 @@ document.getElementById("profile-button").addEventListener('click', async (event
 
 
 
-
-
-
-
-
-// document.getElementById('connect_wallet').addEventListener('click', async (event) => {
-//     event.preventDefault;
-//     try {
-//         if (typeof window.ethereum !== "undefined") {
-//             currentAccount = await connectAccount();
-//             console.log(currentAccount);
-//         }
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
-
 document.getElementById("myForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
@@ -68,7 +50,6 @@ document.getElementById("myForm").addEventListener("submit", async (event) => {
             return;
         }
         formData.append("value", document.getElementById("value").value);
-
         const response = await fetch("/submit", {
             method: "POST",
             body: formData,

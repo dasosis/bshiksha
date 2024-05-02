@@ -119,6 +119,3 @@ export async function getUserDetails(walletId) {
         console.error("Error getting user details:", error);
     }
 }
-
-
-
