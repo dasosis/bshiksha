@@ -11,6 +11,7 @@ export async function uploadPost_block(
         const {contractInstance} = await getcontractInstance();
         const transaction = contractInstance.methods.uploadPost(
             postId,
+            postData.title,
             postData.cid,
             postData.description,
             valueinWei

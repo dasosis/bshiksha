@@ -39,12 +39,6 @@ document.getElementById("profile-button").addEventListener('click', async (event
 
 
 
-
-
-
-
-
-
 // document.getElementById('connect_wallet').addEventListener('click', async (event) => {
 //     event.preventDefault;
 //     try {

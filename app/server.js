@@ -10,13 +10,8 @@ const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
 
-app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(directoryPath, 'src')));
 app.use(express.static(path.join(directoryPath, '../build/contracts')));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(directoryPath, 'src', 'index.html'));
-});
 
 app.post('/submit', upload.single('file'), async (req, res) => {
     try {
