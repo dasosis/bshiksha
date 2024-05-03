@@ -1,2 +1,2 @@
-app/node_modules/
-build/
+/app/node_modules
+/build

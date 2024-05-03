@@ -163,3 +163,14 @@ async function uploadPostToBlock(web3, contractInstance, currentAccount, postDat
         throw error;
     }
 }
+
+async function signUpUser(userName, userEmail, isProfessor, universityName) {
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+    try {
+        await contract.methods.signUpUser(userName, userEmail, isProfessor, universityName).send({ from: userAddress });
+        console.log("User signed up successfully");
+    } catch (error) {
+        console.error("Error signing up user:", error);
+    }
+}
