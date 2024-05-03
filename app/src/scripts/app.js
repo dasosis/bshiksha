@@ -75,6 +75,7 @@ document.getElementById('feed-button').addEventListener('click', async (event) =
   document.getElementById('post-container').classList.add('hidden');
   document.getElementById('feed-container').classList.remove('hidden');
   document.getElementById('profile-container').classList.add('hidden');
+  document.getElementById('feed-container').innerHTML = '';
   await viewPostInFeedTab(currentAccount);
 });
 
