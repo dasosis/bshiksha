@@ -16,7 +16,6 @@ app.use(express.static(path.join(directoryPath, '../build/contracts')));
 
 app.get('/', isAuthenticated, (req, res) => {
     res.sendFile(path.join(directoryPath, '/src', '/index.html'));
-    isLoggedIn = false;
 });
 
 app.get('/login', (req, res) => {
@@ -26,12 +25,13 @@ app.get('/login', (req, res) => {
 app.post('/userVerified', (req, res) => {
     isLoggedIn = true;
     isProfessor = req.body.isProfessor;
-    console.log(isProfessor)
+    console.log(req.body);
+    console.log("isProfessor /userVerified = ",isProfessor)
     res.redirect('/');
 });
 
 app.post('/isProfessor', (req, res) => {
-    console.log("in IsProf post");
+    console.log("in IsProf post prof value = ",);
     const isProfessorValue = isProfessor ? 1 : 0;
     console.log(isProfessorValue);
     res.status(200).json(isProfessorValue);
@@ -55,6 +55,8 @@ app.post('/submit', upload.single('file'), async (req, res) => {
         console.log(err);
     }
 });
+
+isLoggedIn = false;
 
 async function uploadFileToIPFS(fileData) {
     try {

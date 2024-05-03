@@ -6,22 +6,32 @@ var responseData;
 var success_flag;
 var postCount;
 
-window.addEventListener('load', async (event) => {
-    event.preventDefault();
-    console.log(event);
-var isProfessorFlag;
-
-    const response = await fetch('/isProfessor', {
+window.onload = function() {
+    var isProfessorFlag;
+    fetch('/isProfessor', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        isProfessorFlag = data;
+        console.log(isProfessorFlag);
+        if(!isProfessorFlag) {
+            hidePostDiv();
+        }
+    })
+    .catch(function(error) {
+        console.error('There was a problem with the fetch operation:', error);
     });
-    isProfessorFlag = await response.json();
-    console.log(isProfessorFlag);
-    if(!isProfessorFlag)
-hidePostDiv();
-});
+};
+
 
 document.getElementById("post-button").addEventListener('click', async (event) => {
     event.preventDefault();
