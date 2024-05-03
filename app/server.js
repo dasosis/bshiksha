@@ -9,9 +9,20 @@ const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
+var isLoggedIn = false;
 
-app.use(express.static(path.join(directoryPath, 'src')));
+app.use(express.static('src', { index: 'login.html' }));
+// app.use(express.static(path.join(directoryPath, 'src')));
 app.use(express.static(path.join(directoryPath, '../build/contracts')));
+
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(directoryPath, 'src', 'login.html'));
+// });
+
+// app.post("/signup", (req, res) => {
+    // res.sendFile(path.join(directoryPath, 'src', 'index.html'));
+    // res.redirect("index.html")
+// })
 
 app.post('/submit', upload.single('file'), async (req, res) => {
     try {

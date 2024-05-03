@@ -3,7 +3,8 @@ import { getUserDetails, signUpUser_block } from "./block.js";
 import { currentAccount } from "./metamask.js";
 import { login_clear,b_login,b_signup } from "./utility.js";
 
-
+login_clear();
+// document.getElementById('login-container').style.display = "block";
 document.getElementById("login-button").addEventListener('click', (event) => {
     event.preventDefault();
     console.log("hello login button");
@@ -48,6 +49,5 @@ document.getElementById("connect-wallet").addEventListener('click', async (event
     event.preventDefault();
     const userDetails = await getUserDetails(currentAccount[0]); 
     if(userDetails)
-        console.log(userDetails);
-        
+        window.open('/index.html', '_self')        
 });

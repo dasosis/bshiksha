@@ -7,7 +7,7 @@ var success_flag;
 var postCount;
 
 
-
+clear();
 document.getElementById("post-button").addEventListener('click', async (event) => {
     event.preventDefault();
     clear();
