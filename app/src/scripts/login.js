@@ -1,8 +1,6 @@
-
 import { getUserDetails, signUpUser_block } from "./block.js";
 import { currentAccount } from "./metamask.js";
 import { login_clear,b_login,b_signup } from "./utility.js";
-
 
 document.getElementById("login-button").addEventListener('click', (event) => {
     event.preventDefault();
@@ -49,5 +47,16 @@ document.getElementById("connect-wallet").addEventListener('click', async (event
     const userDetails = await getUserDetails(currentAccount[0]); 
     if(userDetails)
         console.log(userDetails);
-        
+        fetch('/userVerified', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if(response.ok){
+                window.location.href = '/';
+            } else throw new error('Bad Response Login Fetch');
+        }).catch(error => {
+            console.error(error);
+        });
 });

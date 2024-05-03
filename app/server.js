@@ -1,17 +1,31 @@
 import express from 'express';
 import path from 'path';
-import pkg from 'body-parser';
 import multer from 'multer';
 import { create } from 'kubo-rpc-client';
 
-const { urlencoded } = pkg;
 const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
 
-app.use(express.static(path.join(directoryPath, 'src')));
+var isLoggedIn = false;
+
 app.use(express.static(path.join(directoryPath, '../build/contracts')));
+
+app.get('/', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(directoryPath, '/src', '/index.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(directoryPath, '/src', '/login.html'));
+});
+
+app.post('/userVerified', (req, res) => {
+    isLoggedIn = true;
+    res.redirect('/');
+});
+
+app.use(express.static(path.join(directoryPath, 'src')));
 
 app.post('/submit', upload.single('file'), async (req, res) => {
     try {
@@ -42,6 +56,13 @@ async function uploadFileToIPFS(fileData) {
     }
 }
 
+function isAuthenticated(req, res, next) {
+    if (isLoggedIn) {
+        return next();
+    } else {
+        res.redirect('/login');
+    }
+}
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
