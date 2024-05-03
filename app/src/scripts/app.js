@@ -5,10 +5,10 @@ import { clear, b_post, b_feed, b_profile, hidePostDiv } from './utility.js';
 var responseData;
 var success_flag;
 var postCount;
+var isProfessorFlag;
 
-window.onload = function() {
-    var isProfessorFlag;
-    fetch('/isProfessor', {
+window.onload = async function() {
+    await fetch('/isProfessor', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
