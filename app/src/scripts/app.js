@@ -67,7 +67,7 @@ document.getElementById('post-button').addEventListener('click', async (event) =
   document.getElementById('profile-container').classList.add('hidden');
 });
 
-document.getElementById('feed-button').addEventListener('click', (event) => {
+document.getElementById('feed-button').addEventListener('click', async (event) => {
   document.getElementById('post-button').classList.remove('selected');
   document.getElementById('feed-button').classList.add('selected');
   document.getElementById('profile-button').classList.remove('selected');
@@ -75,6 +75,7 @@ document.getElementById('feed-button').addEventListener('click', (event) => {
   document.getElementById('post-container').classList.add('hidden');
   document.getElementById('feed-container').classList.remove('hidden');
   document.getElementById('profile-container').classList.add('hidden');
+  await viewPostInFeedTab(currentAccount);
 });
 
 document.getElementById('profile-button').addEventListener('click', (event) => {
