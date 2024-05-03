@@ -9,11 +9,14 @@ const upload = multer();
 const directoryPath = process.cwd();
 
 var isLoggedIn = false;
+var isProfessor;             ;
 
+app.use(express.json());
 app.use(express.static(path.join(directoryPath, '../build/contracts')));
 
 app.get('/', isAuthenticated, (req, res) => {
     res.sendFile(path.join(directoryPath, '/src', '/index.html'));
+    isLoggedIn = false;
 });
 
 app.get('/login', (req, res) => {
@@ -22,7 +25,16 @@ app.get('/login', (req, res) => {
 
 app.post('/userVerified', (req, res) => {
     isLoggedIn = true;
+    isProfessor = req.body.isProfessor;
+    console.log(isProfessor)
     res.redirect('/');
+});
+
+app.post('/isProfessor', (req, res) => {
+    console.log("in IsProf post");
+    const isProfessorValue = isProfessor ? 1 : 0;
+    console.log(isProfessorValue);
+    res.status(200).json(isProfessorValue);
 });
 
 app.use(express.static(path.join(directoryPath, 'src')));

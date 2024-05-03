@@ -45,10 +45,11 @@ document.getElementById("signup-form").addEventListener('submit', async(event) =
 document.getElementById("connect-wallet").addEventListener('click', async (event) => {
     event.preventDefault();
     const userDetails = await getUserDetails(currentAccount[0]); 
-    if(userDetails)
+    if(userDetails){
         console.log(userDetails);
         fetch('/userVerified', {
             method: 'POST',
+            body: JSON.stringify(userDetails),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -59,4 +60,7 @@ document.getElementById("connect-wallet").addEventListener('click', async (event
         }).catch(error => {
             console.error(error);
         });
+    }
+    if(userDetails.isProfessor == false)
+    console.log("hahahaha");
 });

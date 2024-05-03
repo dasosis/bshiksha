@@ -1,12 +1,27 @@
 import { currentAccount } from './metamask.js';
 import { submitPost, getFeed, getPost, viewPostInFeedTab } from './post.js';
-import { clear, b_post, b_feed, b_profile } from './utility.js';
+import { clear, b_post, b_feed, b_profile, hidePostDiv } from './utility.js';
 
 var responseData;
 var success_flag;
 var postCount;
 
+window.addEventListener('load', async (event) => {
+    event.preventDefault();
+    console.log(event);
+var isProfessorFlag;
 
+    const response = await fetch('/isProfessor', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    isProfessorFlag = await response.json();
+    console.log(isProfessorFlag);
+    if(!isProfessorFlag)
+hidePostDiv();
+});
 
 document.getElementById("post-button").addEventListener('click', async (event) => {
     event.preventDefault();
