@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: Outfit, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.mainWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  background-color: #31857b;
+}
+
+.title {
+  font-size: 3rem;
+  color: #fff;
+  font-weight: 700;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2em;
+
+  border-radius: 1em;
+
+  width: 50vw;
+  background-color: #f2f2f2;
+
+  color: #222;
+}
+
+#myForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 90%;
+  align-self: center;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #ced4da;
+  color: #222;
+
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.form-group button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 1em;
+  background-color: #007bff;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.form-group button:hover {
+  background-color: #0056b3;
+}
+
+.form-group textarea {
+  width: 90%;
+  align-self: center;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #ced4da;
+  color: #222;
+
+  font-size: 1.5rem;
+  font-weight: 500;
+}
