@@ -33,27 +33,58 @@ window.onload = function () {
     });
 };
 
+// document.getElementById('post-button').addEventListener('click', async (event) => {
+//   event.preventDefault();
+//   clear();
+//   document.getElementById('post-container').style.display = 'block';
+//   b_post.classList.add('pressed');
+//   console.log('hello post button');
+
+// });
+// document.getElementById('feed-button').addEventListener('click', async (event) => {
+//   event.preventDefault();
+//   console.log('hello feed button');
+//   clear();
+//   document.getElementById('feed-container').style.display = 'block';
+//   b_feed.classList.add('pressed');
+//   await viewPostInFeedTab(currentAccount);
+// });
+// document.getElementById('profile-button').addEventListener('click', async (event) => {
+//   event.preventDefault();
+//   console.log('hello profile button');
+//   clear();
+//   document.getElementById('profile-container').style.display = 'block';
+//   b_profile.classList.add('pressed');
+// });
+
 document.getElementById('post-button').addEventListener('click', async (event) => {
-  event.preventDefault();
-  clear();
-  document.getElementById('post-container').style.display = 'block';
-  b_post.classList.add('pressed');
-  console.log('hello post button');
+  document.getElementById('post-button').classList.add('selected');
+  document.getElementById('feed-button').classList.remove('selected');
+  document.getElementById('profile-button').classList.remove('selected');
+
+  document.getElementById('post-container').classList.remove('hidden');
+  document.getElementById('feed-container').classList.add('hidden');
+  document.getElementById('profile-container').classList.add('hidden');
 });
-document.getElementById('feed-button').addEventListener('click', async (event) => {
-  event.preventDefault();
-  console.log('hello feed button');
-  clear();
-  document.getElementById('feed-container').style.display = 'block';
-  b_feed.classList.add('pressed');
-  await viewPostInFeedTab(currentAccount);
+
+document.getElementById('feed-button').addEventListener('click', (event) => {
+  document.getElementById('post-button').classList.remove('selected');
+  document.getElementById('feed-button').classList.add('selected');
+  document.getElementById('profile-button').classList.remove('selected');
+
+  document.getElementById('post-container').classList.add('hidden');
+  document.getElementById('feed-container').classList.remove('hidden');
+  document.getElementById('profile-container').classList.add('hidden');
 });
-document.getElementById('profile-button').addEventListener('click', async (event) => {
-  event.preventDefault();
-  console.log('hello profile button');
-  clear();
-  document.getElementById('profile-container').style.display = 'block';
-  b_profile.classList.add('pressed');
+
+document.getElementById('profile-button').addEventListener('click', (event) => {
+  document.getElementById('post-button').classList.remove('selected');
+  document.getElementById('feed-button').classList.remove('selected');
+  document.getElementById('profile-button').classList.add('selected');
+
+  document.getElementById('post-container').classList.add('hidden');
+  document.getElementById('feed-container').classList.add('hidden');
+  document.getElementById('profile-container').classList.remove('hidden');
 });
 
 document.getElementById('myForm').addEventListener('submit', async (event) => {

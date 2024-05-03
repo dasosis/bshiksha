@@ -40,12 +40,12 @@ body {
 
 .buttonContainer button {
   padding: 10px 20px;
-  background-color: #fff;
-  color: #222;
+  background-color: transparent;
+  color: #fff;
   font-weight: 400;
   font-size: 1.2em;
 
-  border: 2px solid transparent;
+  border: 2px solid #fff;
   transition: all 0.2s ease-in-out;
   border-radius: 0.5em;
   cursor: pointer;
@@ -53,9 +53,15 @@ body {
 }
 
 .buttonContainer button:hover {
-  background-color: transparent;
-  border: 2px solid #fff;
-  color: #fff;
+  background-color: #eee;
+  border: 2px solid #eee;
+  color: #222;
+}
+
+.buttonContainer button:active {
+  background-color: #ccc;
+  border: 2px solid #ccc;
+  color: #222;
 }
 
 .form-container {
@@ -143,4 +149,13 @@ body {
   background-color: #e2e2e2;
   border: 2px solid #31857b;
   color: #31857b;
+}
+
+.hidden {
+  display: none;
+}
+
+.selected {
+  background-color: #fff !important;
+  color: #222 !important;
 }
