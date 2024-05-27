@@ -7,8 +7,8 @@ const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
-
 var isLoggedIn = false;
+
 var isProfessor;
 
 app.use(express.json());
