@@ -1,6 +1,6 @@
 import React from 'react';
 // import { connectAccount } from '../../../../app/src/scripts/metamask.js';
-import { submitPost } from '../../../../app/src/scripts/post.js';
+// import { submitPost } from '../../../../app/src/scripts/post.js';
 
 import { useStore } from '../../dataStore.js';
 
