@@ -24,3 +24,8 @@ export function login_clear() {
     b_login.classList.remove("pressed");
     b_signup.classList.remove("pressed");
 }
+
+export function hidePostDiv() {
+    document.getElementById('post-button').style.display = "none";
+    document.getElementById('post-container').style.display = "none";
+}

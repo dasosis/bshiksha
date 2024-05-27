@@ -1,82 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BShiksha</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
-    <div class="buttonContainer">
-        <button id="post-button">Post</button>
-        <button id="feed-button">Feed</button>
-        <button id="profile-button">Profile</button>
+  <body>
+    <div class="Navbar">
+      <div class="navTitle">BShiksha</div>
+      <div class="buttonContainer">
+        <button id="post-button" class="selected">Post</button>
+        <button id="feed-button" class="">Feed</button>
+        <button id="profile-button" class="">Profile</button>
+      </div>
     </div>
 
     <div class="form-container" id="post-container">
-        <h2>Submit Form</h2>
-        <form id="myForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title">
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="file">Upload File:</label>
-                <input type="file" id="file" name="file">
-            </div>
-            <div class="form-group">
-                <label for="value">Enter Value in ETH:</label>
-                <input type="number" id="value" step="any" name="value">
-            </div>
-            <div class="form-group">
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-    </div>
-
-    <div id="feed-container" class="form-container">
-        
-    </div>
-    <div id="profile-container" class="form-container">
-        <div class="login-container">
-            <h2>Sign Up Form</h2>
-            <form id="signup">
-                <div class="form-group">
-                    <label for="userName">User Name:</label>
-                    <input type="text" id="userName" name="userName">
-                </div>
-                <div class="form-group">
-                    <label for="userEmail">Email:</label>
-                    <input type="email" id="userEmail" name="userEmail">
-                </div>
-                <div class="form-group">
-                    <label for="isProfessor">Are you a professor?</label>
-                    <input type="checkbox" id="isProfessor" name="isProfessor">
-                </div>
-                <div class="form-group">
-                    <label for="universityName">University Name:</label>
-                    <input type="text" id="universityName" name="universityName">
-                </div>
-                <div class="form-group">
-                    <button type="submit">Sign Up</button>
-                </div>
-            </form>
+      <h2>Submit Form</h2>
+      <form id="myForm" enctype="multipart/form-data">
+        <div class="form-group">
+          <input type="text" id="title" name="title" placeholder="Post Title" />
         </div>
+        <div class="form-group">
+          <textarea id="description" name="description" placeholder="Description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="file">Upload File:</label>
+          <input type="file" id="file" name="file" />
+        </div>
+        <div class="form-group">
+          <label for="value">Enter Value in ETH:</label>
+          <input type="number" id="value" step="any" name="value" />
+        </div>
+        <div class="form-group">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
     </div>
 
-
-
-    
+    <div id="feed-container" class="form-container hidden"></div>
+    <div id="profile-container" class="form-container hidden">
+      <div class="login-container">
+        <h2>Sign Up Form</h2>
+        <form id="signup">
+          <div class="form-group">
+            <label for="userName">User Name:</label>
+            <input type="text" id="userName" name="userName" />
+          </div>
+          <div class="form-group">
+            <label for="userEmail">Email:</label>
+            <input type="email" id="userEmail" name="userEmail" />
+          </div>
+          <div class="form-group">
+            <label for="isProfessor">Are you a professor?</label>
+            <input type="checkbox" id="isProfessor" name="isProfessor" />
+          </div>
+          <div class="form-group">
+            <label for="universityName">University Name:</label>
+            <input type="text" id="universityName" name="universityName" />
+          </div>
+          <div class="form-group">
+            <button type="submit">Sign Up</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script type="module" src="/scripts/app.js"></script>
-
-</body>
-
+  </body>
 </html>
