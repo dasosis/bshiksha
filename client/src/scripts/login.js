@@ -41,16 +41,16 @@ document.getElementById('signup-form').addEventListener('submit', async (event) 
       isProfessor,
     };
     console.log('SignUp Form Data - ', formData);
-    console.log(currentAccount[0]);
+    console.log(currentAccount);
   } catch (error) {
     console.error('Error POST Form: ', error);
   }
-  const flag = await signUpUser_block(currentAccount[0], formData);
+  const flag = await signUpUser_block(currentAccount, formData);
 });
 
 document.getElementById('connect-wallet').addEventListener('click', async (event) => {
   event.preventDefault();
-  const userDetails = await getUserDetails(currentAccount[0]);
+  const userDetails = await getUserDetails(currentAccount);
   if (userDetails) {
     console.log(userDetails);
     fetch('/userVerified', {

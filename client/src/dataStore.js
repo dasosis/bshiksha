@@ -4,6 +4,10 @@ import { devtools, persist } from 'zustand/middleware';
 let dataStore = (set) => ({
   currentAccount: null,
   setCurrentAccount: (currentAccount) => set({ currentAccount }),
+  feedData: [],
+  responseData: null,
+  setFeedData: (data) => set({ feedData: data }),
+  setResponseData: (data) => set({ responseData: data }),
 });
 
 // Apply both devtools and persist middleware

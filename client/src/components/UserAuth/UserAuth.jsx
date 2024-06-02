@@ -7,13 +7,16 @@ import './UserAuth.scss';
 
 const UserAuth = () => {
   const [signupState, setSignupState] = useState(0);
+  const [loginInitiated, setLoginInitiated] = useState(false);
   const currentAccount = useStore((state) => state.currentAccount);
   const setCurrentAccount = useStore((state) => state.setCurrentAccount);
+
   useEffect(() => {
-    if (currentAccount) {
+    if (loginInitiated && currentAccount) {
       window.location.href = '/home';
     }
-  }, [currentAccount]);
+  }, [currentAccount, loginInitiated]);
+
   const metaMaskConnect = async () => {
     try {
       const accounts = await window.ethereum.request({
@@ -21,6 +24,7 @@ const UserAuth = () => {
       });
       console.log('Connected wallet address:', accounts);
       setCurrentAccount(accounts[0]);
+      setLoginInitiated(true);
     } catch (error) {
       console.error('Error connecting to MetaMask:', error);
       throw error;

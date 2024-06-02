@@ -20,7 +20,7 @@ export async function getcontractInstance() {
     const abi = contractArtifact.abi;
     const deployment = Object.keys(contractArtifact.networks);
     const address = contractArtifact.networks[deployment[deployment.length - 1]];
-    console.log('Contract Address', address);
+    // console.log('Contract Address', address);
     const contractInstance = new web3.eth.Contract(abi, address.address);
     // const networkId = await web3.eth.net.getId();
     return { contractInstance };

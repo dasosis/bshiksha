@@ -1,5 +1,5 @@
 import { connectAccount } from './metamask.js';
-import { submitPost, getFeed, getPost } from './post.js';
+import { getFeed, getPost } from './post.js';
 
 document.querySelector('#feed').addEventListener('load', async (event) => {
   event.preventDefault();
