@@ -1,6 +1,6 @@
 import React from 'react';
 // import { connectAccount } from '../../../../app/src/scripts/metamask.js';
-import { submitPost } from '../../../../app/src/scripts/post.js';
+import { submitPost } from './../../scripts/post.js';
 
 import { useStore } from '../../dataStore.js';
 
@@ -42,6 +42,7 @@ const Upload = () => {
       console.error(error);
     }
     console.log('Fetch Data from Server...', responseData);
+    console.log(currentAccount);
     success_flag = await submitPost(currentAccount, responseData);
   };
 

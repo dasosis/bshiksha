@@ -1,15 +1,14 @@
 import Web3 from 'web3';
 
 export const web3 = new Web3(window.ethereum);
-
-export let currentAccount;
+export var currentAccount = await connectAccount();
 
 export async function connectAccount() {
   try {
     const accounts = await window.ethereum.request({
       method: 'eth_requestAccounts',
     });
-    currentAccount = accounts[0]; // Get the first account
+    const currentAccount = accounts;
     console.log('Connected wallet address:', currentAccount);
     return currentAccount;
   } catch (error) {
@@ -17,12 +16,3 @@ export async function connectAccount() {
     throw error;
   }
 }
-
-// Initialize the connection to the account on script load
-connectAccount()
-  .then((account) => {
-    console.log('Initial account connection successful:', account);
-  })
-  .catch((error) => {
-    console.error('Initial account connection failed:', error);
-  });
