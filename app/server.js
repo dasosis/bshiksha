@@ -1,25 +1,30 @@
 import express from 'express';
 import path from 'path';
 import multer from 'multer';
+import cors from 'cors';
 import { create } from 'kubo-rpc-client';
 
 const app = express();
 const port = 3000;
 const upload = multer();
 const directoryPath = process.cwd();
-var isLoggedIn = false;
 
-var isProfessor;
+let isLoggedIn = false;
+let isProfessor;
+
+// Enable CORS for all routes
+app.use(cors());
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.static(path.join(directoryPath, '../build/contracts')));
 
 app.get('/', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(directoryPath, '/src', '/index.html'));
+  res.sendFile(path.join(directoryPath, '/src', 'index.html'));
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(directoryPath, '/src', '/login.html'));
+  res.sendFile(path.join(directoryPath, '/src', 'login.html'));
 });
 
 app.post('/userVerified', (req, res) => {
@@ -53,20 +58,18 @@ app.post('/submit', upload.single('file'), async (req, res) => {
     res.json(responseData);
   } catch (err) {
     console.log(err);
+    res.status(500).send('Error uploading file to IPFS');
   }
 });
-
-isLoggedIn = false;
 
 async function uploadFileToIPFS(fileData) {
   try {
     const client = create('/ip4/127.0.0.1/tcp/5001');
-    // console.log(`File content: ${fileData.toString()}`)
-    // const fileData = await fs.(readFileSyncfilePath)
     const { cid } = await client.add(fileData);
     return { cid };
   } catch (error) {
     console.error(error);
+    throw new Error('IPFS upload failed');
   }
 }
 

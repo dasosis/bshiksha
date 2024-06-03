@@ -30,7 +30,7 @@ export async function getFeed() {
 //     return signup_flag;
 // }
 
-async function getPostForFeed(postId) {
+export async function getPostForFeed(postId) {
     const postDetails = await callPost_block(postId);
     return postDetails;
 }
