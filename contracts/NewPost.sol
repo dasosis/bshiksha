@@ -25,8 +25,6 @@ contract BShiksha {
         address payable author;
     }
 
-    Post[] public posts;
-
     event UserSignedUp(
         string userName,
         string userEmail,
@@ -66,20 +64,22 @@ contract BShiksha {
     );
 
     function uploadPost (
-        uint256 _postId,
         string memory _postTitle,
         string memory _postHash,
         string memory _postDescription,
         uint256 _viewCost
-    ) public returns (uint256) {
-        require(bytes(_postHash).length > 0);
-        require(bytes(_postDescription).length > 0);
-        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
+    ) public payable {
+        require(bytes(_postHash).length > 0, "Post hash is required");
+        require(bytes(_postDescription).length > 0, "Post description is required");
+        require(_viewCost >= 0 && _viewCost <= 50 * 1e18, "Set Value 0-50 ETH");
+        require(msg.value > 0, "Post creation requires a payment");
 
+        // Increment PostCount only after all validations
         PostCount++;
+        uint256 postId = PostCount;
 
-        Posts[_postId] = Post(
-            _postId,
+        Posts[postId] = Post(
+            postId,
             _postTitle,
             _postHash,
             _postDescription,
@@ -89,7 +89,7 @@ contract BShiksha {
         );
 
         emit PostCreated(
-            _postId,
+            postId,
             _postTitle,
             _postHash,
             _postDescription,
@@ -97,12 +97,10 @@ contract BShiksha {
             _viewCost,
             payable(msg.sender)
         );
-
-        return PostCount;
     }
 
     function tipPostOwner(uint256 _id) public payable {
-        require(_id >= 0 && _id <= PostCount);
+        require(_id > 0 && _id <= PostCount, "Invalid post ID");
         address payable _author = Posts[_id].author;
         _author.transfer(msg.value);
         Posts[_id].tipAmount += msg.value;
@@ -123,7 +121,7 @@ contract BShiksha {
     }
 
     function viewPost(uint256 _postId) public payable {
-        require(_postId >= 0 && _postId <= PostCount);
+        require(_postId > 0 && _postId <= PostCount, "Invalid post ID");
         Post memory post = Posts[_postId];
         if(msg.sender == post.author) {
             return;
