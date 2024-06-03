@@ -18,9 +18,11 @@ const Postview = () => {
         const postCount = await getFeed();
         const posts = [];
         for (let i = 0; i < postCount; i++) {
-          const post = await getPostForFeed(i + 1);
+          const post = await getPostForFeed(i);
           posts.push(serializeBigInt(post));
         }
+        // some serious issues led me to do this
+        // posts.pop();
         setFeedData(posts);
       } catch (error) {
         console.error('Error fetching feed:', error);
@@ -29,8 +31,6 @@ const Postview = () => {
 
     fetchFeed();
   }, [setFeedData]);
-
-  // console.log(feedData);
 
   return (
     <div className='postview'>

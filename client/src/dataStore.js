@@ -8,6 +8,8 @@ let dataStore = (set) => ({
   responseData: null,
   setFeedData: (data) => set({ feedData: data }),
   setResponseData: (data) => set({ responseData: data }),
+  userData: [],
+  setUserData: (data) => set({ userData: data }),
 });
 
 // Apply both devtools and persist middleware

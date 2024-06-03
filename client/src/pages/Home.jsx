@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar/Navbar';
 import Postview from '../components/PostView/Postview';
 import CommentView from '../components/CommentView/CommentView';
+import Profile from '../components/Profile/Profile';
 import Upload from '../components/Upload/Upload';
 
 import { useRender } from '../renderDataStore';
@@ -23,11 +24,7 @@ const Home = () => {
       <Navbar />
       {pageRender == 1 ? (
         <div className='profileWrapper'>
-          <div className='basicProfile'></div>
-          <div className='advProfile'>
-            <div className='profilePostsContainer'></div>
-            <div className='detailProfile'></div>
-          </div>
+          <Profile />
         </div>
       ) : pageRender == 2 ? (
         <div className='uploadWrapper'>

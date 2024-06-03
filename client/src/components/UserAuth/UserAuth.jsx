@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../../dataStore';
 
-import emailData from '../../emailData.json';
+import { signUpUser_block } from '../../scripts/block';
 
 import './UserAuth.scss';
 
@@ -10,6 +10,7 @@ const UserAuth = () => {
   const [loginInitiated, setLoginInitiated] = useState(false);
   const currentAccount = useStore((state) => state.currentAccount);
   const setCurrentAccount = useStore((state) => state.setCurrentAccount);
+  const setUserData = useStore((state) => state.setUserData);
 
   useEffect(() => {
     if (loginInitiated && currentAccount) {
@@ -36,27 +37,31 @@ const UserAuth = () => {
     const name = document.getElementById('name').value;
     const uni = document.getElementById('uni').value;
 
-    if (emailData.some((data) => data.email.split('@')[1] === email.split('@')[1])) {
-      console.log('Email is uni email');
-    } else {
-      console.log('Email is not uni email');
-    }
+    var tempData;
 
     if (signupState == 2) {
-      emailData.push({
-        email: email,
-        name: name,
-        uni: uni,
-        role: 'prof',
-      });
+      tempData = {
+        userName: name,
+        userEmail: email,
+        universityName: uni,
+        isProfessor: true,
+      };
     } else {
-      emailData.push({
-        email: email,
-        name: name,
-        role: 'stud',
-      });
+      tempData = {
+        userName: name,
+        userEmail: email,
+        universityName: uni,
+        isProfessor: false,
+      };
     }
-    window.location.href = '/home';
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    });
+    const flag = await signUpUser_block(accounts[0], tempData);
+    if (flag) {
+      setUserData(tempData);
+      window.location.href = '/home';
+    }
   };
   return (
     <div className='UserAuth'>
@@ -134,6 +139,7 @@ const UserAuth = () => {
             <div className='inputs'>
               <input type='text' name='Email' id='email' className='signupInput' placeholder='Email' />
               <input type='text' name='Name' id='name' className='signupInput' placeholder='Name' />
+              <input type='text' name='Uni Name' id='uni' className='signupInput' placeholder='University Name' />
             </div>
             <div className='loginButton' id='metamaskconn' onClick={handleSignup}>
               Signup with MetaMask Wallet

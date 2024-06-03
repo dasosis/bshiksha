@@ -72,6 +72,8 @@ export async function callPostCount_block() {
 
 export async function signUpUser_block(currentAccount, userData) {
   try {
+    console.log('trying to signup');
+    console.log('Current Account: ', currentAccount);
     const { contractInstance } = await getcontractInstance();
     const transaction = contractInstance.methods.signUpUser(
       userData.userName,
@@ -79,15 +81,17 @@ export async function signUpUser_block(currentAccount, userData) {
       userData.isProfessor,
       userData.universityName
     );
-    const gasLimit = await transaction.estimateGas({ from: currentAccount });
-    const gasPrice = await web3.eth.getGasPrice();
+    console.log(transaction);
+
+    // const gasLimit = await transaction.estimateGas({ from: currentAccount });
+    // const gasPrice = await web3.eth.getGasPrice();
     const data = transaction.encodeABI();
-    const gasLimitHex = web3.utils.toHex(gasLimit);
+    // const gasLimitHex = web3.utils.toHex(gasLimit);
     const txObject = {
       from: currentAccount,
       to: contractInstance.options.address,
-      gas: gasLimitHex,
-      gasPrice: gasPrice,
+      // gas: gasLimitHex,
+      // gasPrice: gasPrice,
       data: data,
     };
     console.log('Sending...', txObject);
@@ -95,6 +99,7 @@ export async function signUpUser_block(currentAccount, userData) {
       method: 'eth_sendTransaction',
       params: [txObject],
     });
+
     const TxReceipt = await web3.eth.getTransactionReceipt(TxHash);
     console.log('Successfully Signed Up!! ', TxReceipt);
     if (TxReceipt) {
