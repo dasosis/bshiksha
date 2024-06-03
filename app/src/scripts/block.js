@@ -120,3 +120,14 @@ export async function getUserDetails(walletId) {
         console.error("Error getting user details:", error);
     }
 }
+
+export async function getUserName(walletId) {
+    const {contractInstance} = await getcontractInstance();
+    try {
+        const userDetails = await contractInstance.methods.getUser(walletId).call();
+        console.log("User details from getUserName: ", userDetails.userName);
+        return userDetails.userName;
+    } catch (error) {
+        console.error("Error getting user details:", error);
+    }
+}
