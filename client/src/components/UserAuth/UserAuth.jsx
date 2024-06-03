@@ -60,6 +60,7 @@ const UserAuth = () => {
     const flag = await signUpUser_block(accounts[0], tempData);
     if (flag) {
       setUserData(tempData);
+      setCurrentAccount(accounts[0]);
       window.location.href = '/home';
     }
   };
