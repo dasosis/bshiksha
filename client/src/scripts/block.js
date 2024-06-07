@@ -6,7 +6,7 @@ export async function uploadPost_block(currentAccount, postData, postId) {
     const valueinWei = web3.utils.toWei(postData.value.toString(), 'ether').toString();
     const { contractInstance } = await getcontractInstance();
     const transaction = contractInstance.methods.uploadPost(
-      postId,
+      // postId,
       postData.title,
       postData.cid,
       postData.description,
