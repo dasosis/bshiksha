@@ -48,13 +48,21 @@ app.post('/submit', upload.single('file'), async (req, res) => {
   try {
     const { title, description, value } = req.body;
     const fileData = req.file.buffer;
-    const { cid } = await uploadFileToIPFS(fileData);
-    const responseData = {
+    const { cid: fileCid } = await uploadFileToIPFS(fileData);
+
+    const postObject = {
       title,
       description,
-      cid: cid.toString(),
+      fileCid: fileCid.toString()
+    };
+    const postObjectBuffer = Buffer.from(JSON.stringify(postObject));
+    const { cid: postCid } = await uploadFileToIPFS(postObjectBuffer);
+
+    const responseData = {
+      postCid: postCid.toString(),
       value,
     };
+
     res.json(responseData);
   } catch (err) {
     console.log(err);
