@@ -76,7 +76,7 @@ contract BShiksha {
             "Post description is required"
         );
         require(_viewCost >= 0 && _viewCost <= 50 * 1e18, "Set Value 0-50 ETH");
-        require(msg.value > 0, "Post creation requires a payment");
+        // require(msg.value > 0, "Post creation requires a payment");
 
         // Increment PostCount only after all validations
         PostCount++;
