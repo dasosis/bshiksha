@@ -1,12 +1,12 @@
 import { getcontractInstance } from './contract.js';
 import { web3 } from './metamask.js';
 
-export async function uploadPost_block(currentAccount, postData, postId) {
+export async function uploadPost_block(currentAccount, postData) {
   try {
     const valueinWei = web3.utils.toWei(postData.value.toString(), 'ether').toString();
     const { contractInstance } = await getcontractInstance();
     const transaction = contractInstance.methods.uploadPost(
-      postId,
+      // postId,
       postData.title,
       postData.cid,
       postData.description,
@@ -119,5 +119,27 @@ export async function getUserDetails(walletId) {
     return userDetails;
   } catch (error) {
     console.error('Error getting user details:', error);
+  }
+}
+
+export async function getUserName(walletId) {
+  const { contractInstance } = await getcontractInstance();
+  try {
+    const userDetails = await contractInstance.methods.getUser(walletId).call();
+    console.log('User details from getUserName: ', userDetails.userName);
+    return userDetails.userName;
+  } catch (error) {
+    console.error('Error getting user details:', error);
+  }
+}
+
+export async function fetchPostIdsMadeByUser(walletId) {
+  try {
+    const { contractInstance } = await getcontractInstance();
+    const postIdsOfUser = await contractInstance.methods.fetchPostIdsMadeByUser(walletId).call();
+    console.log('Post Ids made by User:', walletId, ' are: ', postIdsOfUser);
+    return postIdsOfUser;
+  } catch (error) {
+    console.error('User has NOT made any post. Error:', error);
   }
 }

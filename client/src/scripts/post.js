@@ -1,8 +1,8 @@
 import { uploadPost_block, callPostCount_block, callPost_block, sendPostFee_block } from './block.js';
 
 export async function submitPost(currentAccount, responseData) {
-  const postId = await callPostCount_block();
-  const success_post = await uploadPost_block(currentAccount, responseData, postId);
+  // const postId = await callPostCount_block();
+  const success_post = await uploadPost_block(currentAccount, responseData);
   return success_post;
 }
 
