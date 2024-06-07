@@ -1,6 +1,7 @@
 import { currentAccount } from './metamask.js';
 import { submitPost, getFeed, getPost, viewPostInFeedTab } from './post.js';
 import { clear, b_post, b_feed, b_profile, hidePostDiv } from './utility.js';
+// import { fetchPostIdsMadeByUser } from './block.js';
 
 var responseData;
 var success_flag;
@@ -115,6 +116,7 @@ document.getElementById('myForm').addEventListener('submit', async (event) => {
     console.error('Error POST Form: ', error);
   }
   console.log('Fetch Data from Server...', responseData);
+  // fetchPostIdsMadeByUser(currentAccount);
   success_flag = await submitPost(currentAccount, responseData);
 });
 

@@ -1,14 +1,12 @@
 import { getcontractInstance } from "./contract.js";
 import { web3 } from "./metamask.js";
 
-export async function uploadPost_block(
-    currentAccount,
-    postData,
-    postId
-) {
+export async function uploadPost_block(currentAccount, postData, postId) {
     try {
-        const valueinWei = web3.utils.toWei(postData.value.toString(), "ether").toString();
-        const {contractInstance} = await getcontractInstance();
+        const valueinWei = web3.utils
+            .toWei(postData.value.toString(), "ether")
+            .toString();
+        const { contractInstance } = await getcontractInstance();
         const transaction = contractInstance.methods.uploadPost(
             postId,
             postData.title,
@@ -35,7 +33,7 @@ export async function uploadPost_block(
         });
         const txReceipt = await web3.eth.getTransactionReceipt(txHash);
         console.log("Successful Upload!! ", txReceipt);
-        if(txReceipt) return 1;
+        if (txReceipt) return 1;
         else return 0;
     } catch (error) {
         console.error("Error uploading post:", error);
@@ -45,8 +43,8 @@ export async function uploadPost_block(
 
 export async function callPost_block(postId) {
     try {
-        console.log("Post Id in callPost - ",postId);
-        const {contractInstance} = await getcontractInstance();
+        console.log("Post Id in callPost - ", postId);
+        const { contractInstance } = await getcontractInstance();
         const postDetails = await contractInstance.methods.getPost(postId).call();
         // console.log("Post Call - ", postDetails);
         return postDetails;
@@ -55,32 +53,31 @@ export async function callPost_block(postId) {
     }
 }
 
-export async function sendPostFee_block(currentAccount, postDetails){
+export async function sendPostFee_block(currentAccount, postDetails) {
     const viewCostWei = postDetails.viewCost;
     const postId = postDetails.id;
-    const {contractInstance} = await getcontractInstance();
+    const { contractInstance } = await getcontractInstance();
     const txReceipt = await contractInstance.methods.viewPost(postId).send({
         from: currentAccount,
         value: viewCostWei,
     });
-    if(txReceipt) return 1;
+    if (txReceipt) return 1;
     else return 0;
 }
 
 export async function callPostCount_block() {
-    const {contractInstance} = await getcontractInstance();
+    const { contractInstance } = await getcontractInstance();
     const postCount = await contractInstance.methods.PostCount().call();
     return postCount;
 }
 
 export async function signUpUser_block(currentAccount, userData) {
-    
     try {
-        const {contractInstance} = await getcontractInstance();
+        const { contractInstance } = await getcontractInstance();
         const transaction = contractInstance.methods.signUpUser(
-            userData.userName, 
-            userData.userEmail, 
-            userData.isProfessor, 
+            userData.userName,
+            userData.userEmail,
+            userData.isProfessor,
             userData.universityName
         );
         const gasLimit = await transaction.estimateGas({ from: currentAccount });
@@ -101,7 +98,7 @@ export async function signUpUser_block(currentAccount, userData) {
         });
         const TxReceipt = await web3.eth.getTransactionReceipt(TxHash);
         console.log("Successfully Signed Up!! ", TxReceipt);
-        if(TxReceipt){
+        if (TxReceipt) {
             return 1;
         } else return 0;
     } catch (error) {
@@ -111,7 +108,7 @@ export async function signUpUser_block(currentAccount, userData) {
 }
 
 export async function getUserDetails(walletId) {
-    const {contractInstance} = await getcontractInstance();
+    const { contractInstance } = await getcontractInstance();
     try {
         const userDetails = await contractInstance.methods.getUser(walletId).call();
         console.log("User details: ", userDetails);
@@ -122,12 +119,23 @@ export async function getUserDetails(walletId) {
 }
 
 export async function getUserName(walletId) {
-    const {contractInstance} = await getcontractInstance();
+    const { contractInstance } = await getcontractInstance();
     try {
         const userDetails = await contractInstance.methods.getUser(walletId).call();
         console.log("User details from getUserName: ", userDetails.userName);
         return userDetails.userName;
     } catch (error) {
         console.error("Error getting user details:", error);
+    }
+}
+
+export async function fetchPostIdsMadeByUser(walletId) {
+    try {
+        const { contractInstance } = await getcontractInstance();
+        const postIdsOfUser = await contractInstance.methods.fetchPostIdsMadeByUser(walletId).call();
+        console.log("Post Ids made by User:", walletId, " are: ", postIdsOfUser);
+        return postIdsOfUser;
+    } catch (error) {
+        console.error("User has NOT made any post. Error:", error);
     }
 }
