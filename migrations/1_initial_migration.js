@@ -1,5 +1,5 @@
-const BShiksha = artifacts.require("BShiksha");
+const BShikshaModified = artifacts.require("BShikshaModified");
 
 module.exports = async function(deployer) {
-    await deployer.deploy(BShiksha);
+    await deployer.deploy(BShikshaModified);
 };
