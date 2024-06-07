@@ -7,23 +7,21 @@ export async function uploadPost_block(currentAccount, postData, postId) {
             .toWei(postData.value.toString(), "ether")
             .toString();
         const { contractInstance } = await getcontractInstance();
+        console.log("from uploadPost_block:", postData);
         const transaction = contractInstance.methods.uploadPost(
-            postId,
-            postData.title,
-            postData.cid,
-            postData.description,
+            postData.postCid,
             valueinWei
         );
-        const gasLimit = await transaction.estimateGas({ from: currentAccount });
-        const gasPrice = await web3.eth.getGasPrice();
+        // const gasLimit = await transaction.estimateGas({ from: currentAccount });
+        // const gasPrice = await web3.eth.getGasPrice();
         const data = transaction.encodeABI();
         // const nonce = await web3.eth.getTransactionCount(currentAccount);
-        const gasLimitHex = web3.utils.toHex(gasLimit);
+        // const gasLimitHex = web3.utils.toHex(gasLimit);
         const txObject = {
             from: currentAccount,
             to: contractInstance.options.address,
-            gas: gasLimitHex,
-            gasPrice: gasPrice,
+            // gas: gasLimitHex,
+            // gasPrice: gasPrice,
             data: data,
         };
         console.log("Sending...", txObject);
