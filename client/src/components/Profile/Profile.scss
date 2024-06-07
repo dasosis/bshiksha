@@ -1,0 +1,79 @@
+.Profile {
+  color: #111;
+  width: 99vw;
+  min-height: 80vh;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.Profile h1 {
+  font-size: 1.2em;
+  float: left;
+}
+
+.profile-highlight {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.profile-highlight h2 {
+  font-size: 2em;
+}
+
+.profile-highlight #userName {
+  font-size: 3em;
+}
+
+.walletID {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  //   margin-top: 20px;
+
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  margin-top: 20px;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5em;
+  margin-top: 20px;
+
+  background-color: #d9d9d9;
+
+  padding: 1em;
+  border-radius: 0.5em;
+}
+
+.profile-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  gap: 1em;
+
+  .detail-label {
+    font-weight: bold;
+  }
+}
