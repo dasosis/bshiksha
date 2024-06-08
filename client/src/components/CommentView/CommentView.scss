@@ -5,7 +5,7 @@
   flex-direction: column;
 
   position: sticky; /* Key property for stickiness */
-  top: 5em; /* Adjust offset from the top if needed */
+  top: 10em; /* Adjust offset from the top if needed */
 
   gap: 0.5em;
 
@@ -14,7 +14,7 @@
   border-radius: 1em;
   background-color: #f2f2f2;
 
-  overflow-y: scroll;
+  overflow-y: auto;
 
   max-width: 30vw;
   max-height: 85vh;
@@ -25,4 +25,35 @@
 
 .CommentView::-webkit-scrollbar {
   display: auto;
+}
+
+.comment-author {
+  font-weight: bold;
+  font-size: 0.6em;
+}
+.comment-text {
+  font-size: 0.8em;
+}
+
+.commentInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  width: 100%;
+
+  input {
+    width: 80%;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    border: 1px solid #d9d9d9;
+  }
+  button {
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
 }
