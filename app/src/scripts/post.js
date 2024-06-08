@@ -2,7 +2,9 @@ import {
     uploadPost_block,
     callPostCount_block,
     callPost_block,
-    sendPostFee_block
+    sendPostFee_block,
+    addCommentToBlock,
+    fetchCommentEventsFromBlock
 } from "./block.js";
 
 export async function submitPost(currentAccount, responseData) {
@@ -73,6 +75,66 @@ export async function viewPostInFeedTab(currentAccount) {
             window.open(`http://localhost:8080/ipfs/${post.hash}`);
         });
         postDiv.appendChild(button);
+
+        const events = await fetchCommentEventsFromBlock(i);
+        console.log("Logging Events from post.js",events,i);
+
+        const commentsDiv = document.createElement("div");
+        commentsDiv.classList.add("comments");
+        postDiv.appendChild(commentsDiv);
+
+        const commentInput = document.createElement("input");
+        commentInput.type = "text";
+        commentInput.placeholder = "Add a comment...";
+        commentsDiv.appendChild(commentInput);
+
+        const submitCommentButton = document.createElement("button");
+        submitCommentButton.innerText = "Submit";
+        commentsDiv.appendChild(submitCommentButton);
+
+        const commentsDisplay = document.createElement("div");
+        commentsDisplay.classList.add("comments-display");
+        commentsDiv.appendChild(commentsDisplay);
+
+        const existingComments = await fetchCommentsForPost(post.id);
+        // existingComments.forEach(comment => {
+        //     const commentParagraph = document.createElement("p");
+        //     commentParagraph.textContent = comment;
+        //     commentsDisplay.appendChild(commentParagraph);
+        // });
+
+        submitCommentButton.addEventListener('click', async () => {
+            try {
+                const comment = commentInput.value.trim();
+                if (comment) {
+                    const response = await fetch("/comment",{
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json" // Set content type to JSON
+                        },
+                        body: JSON.stringify({comment})
+                    })
+                    const responseData = await response.json();
+                    console.log(responseData,i);
+                    addCommentToBlock(i, responseData, currentAccount[0]);
+                    // const newCommentParagraph = document.createElement("p");
+                    // newCommentParagraph.textContent = comment;
+                    // commentsDisplay.appendChild(newCommentParagraph);
+                    // commentInput.value = ""; // Clear the input
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
         document.getElementById("feed-container").appendChild(postDiv);
     }
+}
+
+async function fetchCommentsForPost(postid){
+    return(postid);
+}
+
+async function submitCommentForPost(postid, comment){
+ return 0;
 }
