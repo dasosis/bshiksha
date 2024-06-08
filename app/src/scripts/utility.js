@@ -29,3 +29,28 @@ export function hidePostDiv() {
     document.getElementById('post-button').style.display = "none";
     document.getElementById('post-container').style.display = "none";
 }
+
+async function convertRupeesToEth(rupees) {
+    try {
+        // Fetch INR to USD exchange rate
+        const inrToUsdResponse = await fetch('https://api.exchangerate-api.com/v4/latest/INR');
+        const inrToUsdData = await inrToUsdResponse.json();
+        const inrToUsdRate = inrToUsdData.rates.USD;
+
+        // Fetch ETH to USD exchange rate from CoinGecko
+        const ethToUsdResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+        const ethToUsdData = await ethToUsdResponse.json();
+        const ethToUsdRate = ethToUsdData.ethereum.usd;
+
+        // Convert INR to USD
+        const usdAmount = rupees * inrToUsdRate;
+
+        // Convert USD to ETH
+        const ethAmount = usdAmount / ethToUsdRate;
+
+        return ethAmount;
+    } catch (error) {
+        console.error('Error converting Rupees to ETH:', error);
+        return null;
+    }
+}
