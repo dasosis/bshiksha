@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 import Post from './Post/Post';
 import { getPostForFeed, getFeed } from '../../scripts/post';
 import { useStore } from '../../dataStore.js';
@@ -10,25 +11,30 @@ const serializeBigInt = (obj) => {
 
 const Postview = () => {
   const { feedData, setFeedData } = useStore();
-  const { currentAccount } = useStore();
+  // const { currentAccount } = useStore();
+
+  const fetchFeed = async () => {
+    const postCount = await getFeed();
+    let responseData = [];
+    for (let i = 1; i <= postCount; i++) {
+      const post = await getPostForFeed(i);
+      // console.log('Post:', post);
+      const postJson = serializeBigInt(post);
+      const response = await axios.post('http://localhost:3000/feed', postJson);
+      const responseDataWithExtras = {
+        ...response.data,
+        id: serializeBigInt(post.id),
+        viewCost: serializeBigInt(post.viewCost),
+        hash: post.postCid,
+      };
+      responseData.push(responseDataWithExtras);
+    }
+    // console.log('ResponseData:', responseData);
+    setFeedData(responseData);
+    // console.log('FeedData:', feedData);
+  };
 
   useEffect(() => {
-    const fetchFeed = async () => {
-      try {
-        const postCount = await getFeed();
-        const posts = [];
-        for (let i = 0; i < postCount; i++) {
-          const post = await getPostForFeed(i + 1);
-          posts.push(serializeBigInt(post));
-        }
-        // some serious issues led me to do this
-        // posts.pop();
-        setFeedData(posts);
-      } catch (error) {
-        console.error('Error fetching feed:', error);
-      }
-    };
-
     fetchFeed();
   }, [setFeedData]);
 
