@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useStore } from '../../../dataStore.js';
 import { fetchPostIdsMadeByUser } from '../../../scripts/block.js';
 import { getPostForFeed } from '../../../scripts/post.js';
+import './UserPosts.scss';
 
 const serializeBigInt = (obj) => {
   return JSON.parse(JSON.stringify(obj, (key, value) => (typeof value === 'bigint' ? value.toString() : value)));

@@ -2,6 +2,11 @@
   color: #111;
   width: 99vw;
   min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1em;
 }
 
 * {
@@ -12,6 +17,7 @@
 .Profile h1 {
   font-size: 1.2em;
   float: left;
+  width: 100%;
 }
 
 .profile-highlight {
@@ -19,7 +25,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 90vw;
+  margin-top: 20px;
 }
 
 .profile-highlight h2 {
@@ -44,7 +51,7 @@
 .profile-info {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: 1em;
   margin-top: 20px;
@@ -61,7 +68,8 @@
   background-color: #d9d9d9;
 
   padding: 1em;
-  border-radius: 0.5em;
+  border-radius: 1em;
+  width: 20vw;
 }
 
 .profile-detail {

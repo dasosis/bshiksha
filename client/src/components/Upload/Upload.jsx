@@ -47,6 +47,7 @@ const Upload = () => {
 
   return (
     <div className='Upload'>
+      <div className='title'>Upload a Post </div>
       <form id='myForm' encType='multipart/form-data' onSubmit={handleUpload}>
         <div className='form-group'>
           <label htmlFor='title'>Title:</label>
