@@ -56,6 +56,8 @@ contract BShikshaModified {
         address payable author
     );
 
+    event CommentAdded(uint256 indexed postId, string commentCid, address indexed commenter);
+
     function uploadPost(
         string memory _postCid,
         uint256 _viewCost
@@ -209,5 +211,10 @@ contract BShikshaModified {
     function fetchListOfPostIdsMadeByUser(address _walletId) public view returns ( uint256[] memory ) {
         require(walletIdToPostId[_walletId].length > 0, "Wallet Id does not exist");
         return walletIdToPostId[_walletId];
+    }
+
+    function uploadPostComment(uint256 _postId, string memory _commentCid) public {
+        require(_postId > 0 && _postId <= PostCount, "Invalid post ID");
+        emit CommentAdded(_postId, _commentCid, msg.sender);
     }
 }
