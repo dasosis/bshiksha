@@ -57,7 +57,7 @@ contract BShiksha {
     );
 
     event CommentAdded(
-        uint256 postId,
+        uint256 indexed postId,
         string commentCid,
         address commenter
     );

@@ -78,6 +78,21 @@ export async function viewPostInFeedTab(currentAccount) {
 
         const events = await fetchCommentEventsFromBlock(i);
         console.log("Logging Events from post.js",events,i);
+        const commentCidArray = [];
+        for (const event of events) {
+            const { commentCid } = event.returnValues;
+            console.log("post.js print coment before server",{commentCid});
+            commentCidArray.push(commentCid);
+        }
+        const commentResponse = await fetch("/commentDecode", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" // Set content type to JSON
+            },
+            body: JSON.stringify({ commentCids: commentCidArray })
+        });
+        // const commentResponseData = await response.json();
+
 
         const commentsDiv = document.createElement("div");
         commentsDiv.classList.add("comments");

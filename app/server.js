@@ -77,6 +77,41 @@ app.post('/comment', async (req, res) => {
   res.json(commentCid.toString());
 });
 
+app.post('/commentDecode', async (req, res) => {
+  const { commentCids } = req.body;
+  if (!commentCids || !Array.isArray(commentCids)) {
+    return res.status(400).json({ error: 'commentCids must be an array' });
+  }
+  // console.log(commentCids);
+  // const response = await fetchCommentBodyFromIPFS(commentCid)
+  const decodedComments = await Promise.all(
+    commentCids.map(async (cid) => {
+      const commentBody = await fetchCommentBodyFromIPFS(cid);
+      return {
+        decodedComment: commentBody ? commentBody : 'Failed to fetch comment'
+      };
+    })
+  );
+  console.log(decodedComments);
+  // Send the array of decoded comments as the response
+  res.json(decodedComments);
+});
+
+async function fetchCommentBodyFromIPFS(cid) {
+  try {
+    const client = create("/ip4/127.0.0.1/tcp/5001");
+    const data = [];
+    for await (const chunk of client.cat(cid)) {
+      data.push(chunk);
+    }
+    const commentBuffer = Buffer.concat(data);
+    return commentBuffer.toString();
+  } catch (error) {
+    console.error('Error fetching data from IPFS:', error);
+    return null;
+  }
+}
+
 app.post('/submit', upload.single('file'), async (req, res) => {
   try {
     const { title, description, value } = req.body;
