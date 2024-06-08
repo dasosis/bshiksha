@@ -32,7 +32,6 @@ const Profile = () => {
       </div>
       <div className='profile-info'>
         {userData.isProfessor ? <UserPosts /> : <p>Student</p>}
-        <UserPosts />
         <div className='profile-details'>
           <div className='profile-detail'>
             <p className='detail-label'>Name :</p>

@@ -10,6 +10,8 @@ let dataStore = (set) => ({
   setResponseData: (data) => set({ responseData: data }),
   userData: [],
   setUserData: (data) => set({ userData: data }),
+  userPosts: [],
+  setUserPosts: (data) => set({ userPosts: data }),
 });
 
 // Apply both devtools and persist middleware

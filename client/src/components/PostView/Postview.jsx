@@ -18,7 +18,7 @@ const Postview = () => {
         const postCount = await getFeed();
         const posts = [];
         for (let i = 0; i < postCount; i++) {
-          const post = await getPostForFeed(i);
+          const post = await getPostForFeed(i + 1);
           posts.push(serializeBigInt(post));
         }
         // some serious issues led me to do this
