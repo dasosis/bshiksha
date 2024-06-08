@@ -3,17 +3,13 @@ import { web3 } from "./metamask.js";
 
 export async function uploadPost_block(
     currentAccount,
-    postData,
-    postId
+    postData
 ) {
     try {
         const valueinWei = web3.utils.toWei(postData.value.toString(), "ether").toString();
         const {contractInstance} = await getcontractInstance();
         const transaction = contractInstance.methods.uploadPost(
-            postId,
-            postData.title,
-            postData.cid,
-            postData.description,
+            postData.postCid,
             valueinWei
         );
         const gasLimit = await transaction.estimateGas({ from: currentAccount });

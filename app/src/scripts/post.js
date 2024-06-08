@@ -6,11 +6,10 @@ import {
 } from "./block.js";
 
 export async function submitPost(currentAccount, responseData) {
-    const postId = await callPostCount_block();
+    // const postId = await callPostCount_block();
     const success_post = await uploadPost_block(
         currentAccount[0],
-        responseData,
-        postId
+        responseData
     );
     return success_post;
 }
@@ -38,19 +37,30 @@ async function getPostForFeed(postId) {
 export async function viewPostInFeedTab(currentAccount) {
     const postCount = await callPostCount_block();
     var payment_flag;
-    for (let i = 0; i < postCount; i++) {
+    for (let i = 1; i <= postCount; i++) {
         const post = await getPostForFeed(i);
+        const postJson = JSON.stringify(post);
+        
+        const response = await fetch("/feed", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" // Set content type to JSON
+            },
+            body: postJson
+        });
+        const responseData = await response.json();
+
         const postDiv = document.createElement("div");
         postDiv.classList.add("post");
         postDiv.style.border = "1px solid black";
         postDiv.style.marginBottom = "10px";
     
         const title = document.createElement("h3");
-        title.textContent = post.title;
+        title.textContent = responseData.title;
         postDiv.appendChild(title);
     
         const description = document.createElement("p");
-        description.textContent = post.description;
+        description.textContent = responseData.description;
         postDiv.appendChild(description);
     
         const button = document.createElement("button");

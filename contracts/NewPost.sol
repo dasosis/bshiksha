@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 contract BShiksha {
     mapping(address => User) public users;
+    mapping(address => uint256[]) public walletIdToPostId;
 
     struct User {
         string userName;
@@ -17,15 +18,11 @@ contract BShiksha {
 
     struct Post {
         uint256 id;
-        string title;
-        string hash;
-        string description;
+        string postCid;
         uint256 tipAmount;
         uint256 viewCost;
         address payable author;
     }
-
-    Post[] public posts;
 
     event UserSignedUp(
         string userName,
@@ -37,9 +34,7 @@ contract BShiksha {
 
     event PostCreated(
         uint256 id,
-        string title,
-        string hash,
-        string description,
+        string postCid,
         uint256 tipAmount,
         uint256 viewCost,
         address payable author
@@ -47,9 +42,7 @@ contract BShiksha {
 
     event PostTipped(
         uint256 id,
-        string title,
-        string hash,
-        string description,
+        string postCid,
         uint256 tipAmount,
         uint256 viewCost,
         address payable author
@@ -57,86 +50,88 @@ contract BShiksha {
 
     event PostViewed(
         uint256 id,
-        string title,
-        string hash,
-        string description,
+        string postCid,
         uint256 tipAmount,
         uint256 viewCost,
         address payable author
     );
 
-    function uploadPost (
-        uint256 _postId,
-        string memory _postTitle,
-        string memory _postHash,
-        string memory _postDescription,
+    function uploadPost(
+        string memory _postCid,
         uint256 _viewCost
-    ) public returns (uint256) {
-        require(bytes(_postHash).length > 0);
-        require(bytes(_postDescription).length > 0);
-        require(_viewCost  >= 0 && _viewCost  <= 50 * 1e18, "Set Value 0-50 ETH");
+    ) public payable {
+        require(bytes(_postCid).length > 0, "Post hash is required");
+        require(_viewCost >= 0 && _viewCost <= 50 * 1e18, "Set Value 0-50 ETH");
 
         PostCount++;
+        uint256 postId = PostCount;
 
-        Posts[_postId] = Post(
-            _postId,
-            _postTitle,
-            _postHash,
-            _postDescription,
+        Posts[postId] = Post(
+            postId,
+            _postCid,
             0,
             _viewCost,
             payable(msg.sender)
         );
 
-        emit PostCreated(
-            _postId,
-            _postTitle,
-            _postHash,
-            _postDescription,
-            0,
-            _viewCost,
-            payable(msg.sender)
-        );
+        walletIdToPostId[msg.sender].push(postId);
 
-        return PostCount;
+        emit PostCreated(postId, _postCid, 0, _viewCost, payable(msg.sender));
     }
 
-    function tipPostOwner(uint256 _id) public payable {
-        require(_id >= 0 && _id <= PostCount);
-        address payable _author = Posts[_id].author;
-        _author.transfer(msg.value);
-        Posts[_id].tipAmount += msg.value;
-        emit PostTipped(
-            _id,
-            Posts[_id].title,
-            Posts[_id].hash,
-            Posts[_id].description,
-            Posts[_id].tipAmount,
-            Posts[_id].viewCost,
-            _author
-        );
-    }
+    // function tipPostOwner(uint256 _id) public payable {
+    //     require(_id > 0 && _id <= PostCount, "Invalid post ID");
+    //     address payable _author = Posts[_id].author;
+    //     _author.transfer(msg.value);
+    //     Posts[_id].tipAmount += msg.value;
+    //     emit PostTipped(
+    //         _id,
+    //         Posts[_id].postCid,
+    //         Posts[_id].tipAmount,
+    //         Posts[_id].viewCost,
+    //         _author
+    //     );
+    // }
 
-    function getPost(uint256 postId) public view returns (uint256 id, string memory title, string memory hash, string memory description, uint256 tipAmount, uint256 viewCost, address payable author) {
+    function getPost(
+        uint256 postId
+    )
+        public
+        view
+        returns (
+            uint256 id,
+            string memory postCid,
+            uint256 tipAmount,
+            uint256 viewCost,
+            address payable author
+        )
+    {
         Post memory post = Posts[postId];
-        return (post.id, post.title, post.hash, post.description, post.tipAmount, post.viewCost, post.author);
+        return (
+            post.id,
+            post.postCid,
+            post.tipAmount,
+            post.viewCost,
+            post.author
+        );
     }
 
     function viewPost(uint256 _postId) public payable {
-        require(_postId >= 0 && _postId <= PostCount);
+        require(_postId > 0 && _postId <= PostCount, "Invalid post ID");
         Post memory post = Posts[_postId];
-        if(msg.sender == post.author) {
+        if (msg.sender == post.author) {
             return;
         }
-        require(msg.value >= post.viewCost, "Insufficient payment to view the post");
+        require(
+            msg.value >= post.viewCost,
+            "Insufficient payment to view the post"
+        );
         sendViaCall(payable(address(post.author)), msg.value);
         emit PostViewed(
             _postId,
-            post.title,
-            post.hash,
-            post.description,
+            post.postCid,
             post.tipAmount,
-            msg.value, 
+            msg.value,
             post.author
         );
     }
@@ -193,11 +188,16 @@ contract BShiksha {
         });
 
         emit UserSignedUp(
-        _userName,
-        _userEmail,
-        _isProfessor,
-        _universityName,
-        payable(msg.sender)
-    );
+            _userName,
+            _userEmail,
+            _isProfessor,
+            _universityName,
+            payable(msg.sender)
+        );
+    }
+
+    function fetchListOfPostIdsMadeByUser(address _walletId) public view returns ( uint256[] memory ) {
+        require(walletIdToPostId[_walletId].length > 0, "Wallet Id does not exist");
+        return walletIdToPostId[_walletId];
     }
 }
