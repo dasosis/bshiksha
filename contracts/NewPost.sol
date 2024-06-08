@@ -26,11 +26,12 @@ contract BShiksha {
 
     event UserSignedUp(
         string userName,
-        string userEmail,
+        string indexed userEmail,
         bool isProfessor,
         string universityName,
         address payable walletId
     );
+
 
     event PostCreated(
         uint256 id,

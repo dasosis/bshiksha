@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../../dataStore';
 
-import { signUpUser_block } from '../../scripts/block';
+import { signUpUser_block, isEmailAlreadyInUse } from '../../scripts/block';
 
 import './UserAuth.scss';
 
@@ -57,6 +57,11 @@ const UserAuth = () => {
     const accounts = await window.ethereum.request({
       method: 'eth_requestAccounts',
     });
+    const used = await isEmailAlreadyInUse(email);
+    if (used) {
+      alert('Email already in use');
+      return;
+    }
     const flag = await signUpUser_block(accounts[0], tempData);
     if (flag) {
       setUserData(tempData);

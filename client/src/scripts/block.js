@@ -185,3 +185,19 @@ export async function fetchCommentEventsFromBlock(postId) {
     console.error('Error Fetching Comment Event', error);
   }
 }
+
+export async function isEmailAlreadyInUse(emailId) {
+  try {
+    const { contractInstance } = await getcontractInstance();
+    const events = await contractInstance.getPastEvents('UserSignedUp', {
+      filter: { userEmail: emailId },
+      fromBlock: 0,
+      toBlock: 'latest',
+    });
+    console.log(events);
+    return events.length > 0;
+  } catch (error) {
+    console.error('Error Fetching User Sign Up Event', error);
+    throw new Error('Error fetching UserSignedUp events');
+  }
+}
