@@ -26,6 +26,7 @@ const Postview = () => {
         id: serializeBigInt(post.id),
         viewCost: serializeBigInt(post.viewCost),
         hash: post.postCid,
+        author: serializeBigInt(post.author),
       };
       responseData.push(responseDataWithExtras);
     }

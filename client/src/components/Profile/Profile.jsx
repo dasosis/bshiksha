@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useStore } from '../../dataStore.js';
 import { getUserDetails } from '../../scripts/block.js';
 
@@ -16,7 +16,14 @@ const Profile = () => {
       setUserData(userDetails);
     };
     fetchData();
-  }, [currentAccount]);
+  }, [
+    currentAccount,
+    setUserData,
+    userData.userName,
+    userData.userEmail,
+    userData.universityName,
+    userData.isProfessor,
+  ]);
 
   return (
     <div className='Profile'>

@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from 'react';
+import axios from 'axios';
 import { useStore } from '../../../dataStore.js';
 import { fetchPostIdsMadeByUser } from '../../../scripts/block.js';
 import { getPostForFeed } from '../../../scripts/post.js';
@@ -10,20 +11,33 @@ const serializeBigInt = (obj) => {
 const UserPosts = () => {
   const { currentAccount } = useStore();
   const { userPosts, setUserPosts } = useStore();
-
   const fetchData = useCallback(async () => {
     try {
       const postIds = await fetchPostIdsMadeByUser(currentAccount);
+      console.log('Current Account: ', currentAccount);
       console.log('Post Ids: ', postIds);
 
       // Serialize BigInt values in postIds
       const serializedPostIds = postIds.map((id) => (typeof id === 'bigint' ? id.toString() : id));
 
+      const responseData = [];
+
       // Fetch details for each post ID
       const postDetailsPromises = serializedPostIds.map(async (postId) => {
         const post = await getPostForFeed(postId);
-        return serializeBigInt(post); // Serialize BigInt values in post details
+        const postJson = serializeBigInt(post);
+        const response = await axios.post('http://localhost:3000/feed', postJson);
+        const responseDataWithExtras = {
+          ...response.data,
+          id: serializeBigInt(post.id),
+          viewCost: serializeBigInt(post.viewCost),
+          hash: post.postCid,
+          author: serializeBigInt(post.author),
+        };
+        responseData.push(responseDataWithExtras);
+        return responseDataWithExtras;
       });
+
       const postDetails = await Promise.all(postDetailsPromises);
 
       setUserPosts(postDetails);

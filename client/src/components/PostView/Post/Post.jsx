@@ -1,10 +1,13 @@
-import { sendPostFee_block } from '../../../scripts/block.js';
+import { useEffect, useState } from 'react';
+import { sendPostFee_block, getUserDetails } from '../../../scripts/block.js';
 import { useStore } from '../../../dataStore.js';
 import './Post.scss';
 
 const Post = (post) => {
   const { currentAccount } = useStore();
-  const { selectedPost, setSelectedPost } = useStore();
+  const { setSelectedPost } = useStore();
+  const [author, setAuthor] = useState('');
+  const [universityName, setUniversityName] = useState('');
 
   const handleDownload = async () => {
     console.log(post.post);
@@ -17,10 +20,20 @@ const Post = (post) => {
     // console.log(selectedPost);
   };
 
+  useEffect(() => {
+    const fetchName = async () => {
+      const userdetails = await getUserDetails(post.post.author);
+      setAuthor(userdetails.userName.toString());
+      setUniversityName(userdetails.universityName.toString());
+    };
+
+    fetchName();
+  }, [author, universityName, post.post.author]);
+
   return (
     <div className='Post' onClick={handleSelect}>
-      <div className='post-author'>{post.post.author}</div>
-      <div className='post-uni'></div>
+      <div className='post-author'>{author}</div>
+      <div className='post-uni'>{universityName}</div>
       <div className='post-title'>{post.post.title}</div>
       <div className='post-content'>{post.post.description}</div>
       <div className='purchaseContent' onClick={handleDownload}>
