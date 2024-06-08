@@ -130,7 +130,8 @@ export async function getUserName(walletId) {
 export async function fetchPostIdsMadeByUser(walletId) {
   try {
     const { contractInstance } = await getcontractInstance();
-    const postIdsOfUser = await contractInstance.methods.fetchPostIdsMadeByUser(walletId).call();
+    // console.log('WalletId:', walletId);
+    const postIdsOfUser = await contractInstance.methods.fetchListOfPostIdsMadeByUser(walletId).call();
     console.log('Post Ids made by User:', walletId, ' are: ', postIdsOfUser);
     return postIdsOfUser;
   } catch (error) {
