@@ -1,13 +1,13 @@
 import { getcontractInstance } from "./contract.js";
 import { web3 } from "./metamask.js";
 
-export async function uploadPost_block(currentAccount, postData, postId) {
+export async function uploadPost_block(
+    currentAccount,
+    postData
+) {
     try {
-        const valueinWei = web3.utils
-            .toWei(postData.value.toString(), "ether")
-            .toString();
+        const valueinWei = web3.utils.toWei(postData.value.toString(), "ether").toString();
         const { contractInstance } = await getcontractInstance();
-        console.log("from uploadPost_block:", postData);
         const transaction = contractInstance.methods.uploadPost(
             postData.postCid,
             valueinWei
@@ -70,6 +70,7 @@ export async function callPostCount_block() {
 }
 
 export async function signUpUser_block(currentAccount, userData) {
+
     try {
         const { contractInstance } = await getcontractInstance();
         const transaction = contractInstance.methods.signUpUser(
@@ -116,24 +117,46 @@ export async function getUserDetails(walletId) {
     }
 }
 
-export async function getUserName(walletId) {
-    const { contractInstance } = await getcontractInstance();
+export async function addCommentToBlock(postId, commentCid, currentAccount) {
     try {
-        const userDetails = await contractInstance.methods.getUser(walletId).call();
-        console.log("User details from getUserName: ", userDetails.userName);
-        return userDetails.userName;
+        const { contractInstance } = await getcontractInstance();
+        const transaction = contractInstance.methods.uploadPostComment(postId, commentCid);
+        console.log(commentCid);
+        const gasLimit = await transaction.estimateGas({ from: currentAccount });
+        const gasPrice = await web3.eth.getGasPrice();
+        const data = transaction.encodeABI();
+        const gasLimitHex = web3.utils.toHex(gasLimit);
+        const txObject = {
+            from: currentAccount,
+            to: contractInstance.options.address,
+            gas: gasLimitHex,
+            gasPrice: gasPrice,
+            data: data,
+        };
+        console.log("Uploading Comment...", txObject);
+        const txHash = await window.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [txObject],
+        });
+        const txReceipt = await web3.eth.getTransactionReceipt(txHash);
+        console.log("Successfully Uploaded Comment!! ", txReceipt);
+
+        // console.log(`Comment added with CID: ${commentCid}`);
     } catch (error) {
-        console.error("Error getting user details:", error);
+        console.error('Error adding comment:', error);
     }
 }
 
-export async function fetchPostIdsMadeByUser(walletId) {
-    try {
-        const { contractInstance } = await getcontractInstance();
-        const postIdsOfUser = await contractInstance.methods.fetchPostIdsMadeByUser(walletId).call();
-        console.log("Post Ids made by User:", walletId, " are: ", postIdsOfUser);
-        return postIdsOfUser;
-    } catch (error) {
-        console.error("User has NOT made any post. Error:", error);
+export async function fetchCommentEventsFromBlock(postId) {
+        try {
+            const { contractInstance } = await getcontractInstance();
+            const events = await contractInstance.getPastEvents('CommentAdded', {
+                filter: { postId },
+                fromBlock: 0,
+                toBlock: 'latest',
+            });
+            return events;
+        } catch (error) {
+            console.error("Error Fetching Comment Event", error);
+        }
     }
-}

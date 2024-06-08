@@ -159,3 +159,10 @@ body {
   background-color: #fff !important;
   color: #222 !important;
 }
+
+.comments {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ccc;
+}
