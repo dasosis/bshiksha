@@ -16,7 +16,7 @@
 
   overflow-y: auto;
 
-  max-width: 30vw;
+  min-width: 20vw;
   max-height: 85vh;
 
   -ms-overflow-style: auto;
@@ -42,11 +42,14 @@
   gap: 0.5em;
   width: 100%;
 
-  input {
+  textarea {
     width: 80%;
     padding: 0.5em;
     border-radius: 0.5em;
     border: 1px solid #d9d9d9;
+    background-color: #fff;
+    color: #111;
+    font-weight: 1.2em;
   }
   button {
     padding: 0.5em 1em;

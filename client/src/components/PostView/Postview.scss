@@ -1,4 +1,4 @@
-.Postview {
+.postview {
   align-self: flex-start;
 
   margin-top: 3em;
@@ -9,7 +9,7 @@
   flex-direction: column;
 
   padding: 2em;
-  max-width: 70vw;
+  // min-width: 70vw;
 
   gap: 2em;
 }
