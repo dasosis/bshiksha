@@ -63,9 +63,11 @@ const CommentView = () => {
 
   return (
     <div className='CommentView'>
-      {userComments.map((value) => (
-        <Comment comment={value} />
-      ))}
+      <div className='commentList'>
+        {userComments.map((value) => (
+          <Comment comment={value} />
+        ))}
+      </div>
       <div className='commentInput'>
         <textarea type='text' placeholder='Add a comment...' />
         <button onClick={handleComment}>Submit</button>

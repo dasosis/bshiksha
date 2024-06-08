@@ -93,7 +93,7 @@ const UserAuth = () => {
                 setSignupState(2);
               }}
             >
-              a Professor
+              Professor
             </div>
             <div
               className='signupButton'
@@ -102,17 +102,16 @@ const UserAuth = () => {
                 setSignupState(3);
               }}
             >
-              a Student
+              Student
             </div>
 
             <div
               className='back'
-              style={{ cursor: 'pointer', color: 'blue', fontSize: '1.2em' }}
               onClick={() => {
                 setSignupState(0);
               }}
             >
-              go back
+              &#x2190;
             </div>
           </div>
         ) : signupState == 2 ? (
@@ -127,12 +126,11 @@ const UserAuth = () => {
             </div>
             <div
               className='back'
-              style={{ cursor: 'pointer', color: 'blue', fontSize: '1.2em' }}
               onClick={() => {
                 setSignupState(1);
               }}
             >
-              go back
+              &#x2190;
             </div>
           </div>
         ) : (
@@ -147,12 +145,11 @@ const UserAuth = () => {
             </div>
             <div
               className='back'
-              style={{ cursor: 'pointer', color: 'blue', fontSize: '1.2em' }}
               onClick={() => {
                 setSignupState(1);
               }}
             >
-              go back
+              &#x2190;
             </div>
           </div>
         )}
