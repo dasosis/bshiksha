@@ -54,7 +54,7 @@ const CommentView = () => {
       body: JSON.stringify({ comment }),
     });
     const commentCid = await response.json();
-    console.log(commentCid);
+    // console.log(commentCid);
     await addCommentToBlock(selectedPost.id, commentCid, currentAccount);
     fetchComments();
     document.querySelector('.commentInput input').value = '';

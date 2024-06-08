@@ -117,10 +117,10 @@ export async function getUserDetails(walletId) {
 
 export async function getUserName(walletId) {
   const { contractInstance } = await getcontractInstance();
-  console.log('WalletId:', walletId);
+  // console.log('WalletId:', walletId);
   try {
     const userDetails = await contractInstance.methods.getUser(walletId).call();
-    console.log('User details from getUserName: ', userDetails.userName);
+    // console.log('User details from getUserName: ', userDetails.userName);
     return userDetails.userName;
   } catch (error) {
     console.error('Error getting user details:', error);
