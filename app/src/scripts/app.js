@@ -6,21 +6,20 @@ import { clear, b_post, b_feed, b_profile, hidePostDiv } from './utility.js';
 var responseData;
 var success_flag;
 var postCount;
+var isProfessorFlag;
 
-window.onload = function () {
-  clear();
-  var isProfessorFlag;
-  fetch('/isProfessor', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
+window.onload = async function() {
+    await fetch('/isProfessor', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
     })
     .then(function (data) {
       isProfessorFlag = data;
