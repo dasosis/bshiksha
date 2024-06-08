@@ -44,7 +44,7 @@ const CommentView = () => {
   }, [selectedPost]);
 
   const handleComment = async () => {
-    const comment = document.querySelector('.commentInput input').value.trim();
+    const comment = document.querySelector('.commentInput textarea').value.trim();
     if (!comment) return;
     const response = await fetch('http://localhost:3000/comment', {
       method: 'POST',
@@ -57,7 +57,7 @@ const CommentView = () => {
     // console.log(commentCid);
     await addCommentToBlock(selectedPost.id, commentCid, currentAccount);
     fetchComments();
-    document.querySelector('.commentInput input').value = '';
+    document.querySelector('.commentInput textarea').value = '';
     // setUserComments([...userComments, commentCid]);
   };
 
@@ -67,7 +67,7 @@ const CommentView = () => {
         <Comment comment={value} />
       ))}
       <div className='commentInput'>
-        <input type='text' placeholder='Add a comment...' />
+        <textarea type='text' placeholder='Add a comment...' />
         <button onClick={handleComment}>Submit</button>
       </div>
     </div>
