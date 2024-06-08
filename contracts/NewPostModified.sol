@@ -56,7 +56,7 @@ contract BShikshaModified {
         address payable author
     );
 
-    event CommentAdded(uint256 indexed postId, string commentCid, address indexed commenter);
+    event CommentAdded(uint256 indexed postId, string indexed commentCid, address indexed commenter);
 
     function uploadPost(
         string memory _postCid,

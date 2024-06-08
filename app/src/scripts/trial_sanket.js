@@ -3,7 +3,7 @@ import { getcontractInstance } from "./contract.js";
 import { currentAccount } from './metamask.js';
 import { create } from "kubo-rpc-client";
 
-async function fetchPostFromIPFS(postCid) {
+export async function fetchPostFromIPFS(postCid) {
     try {
         const client = create("/ip4/127.0.0.1/tcp/5001");
         const data = [];
@@ -21,7 +21,7 @@ async function fetchPostFromIPFS(postCid) {
     }
 }
 
-async function uploadPostToIPFS(_title, _description, _postHash) {
+export async function uploadPostToIPFS(_title, _description, _postHash) {
     try {
         const postObject = {
             _title,
@@ -38,7 +38,7 @@ async function uploadPostToIPFS(_title, _description, _postHash) {
     }
 }
 
-async function uploadFileToIPFS(fileData) {
+export async function uploadFileToIPFS(fileData) {
     try {
         const client = create("/ip4/127.0.0.1/tcp/5001");
         const { cid } = await client.add(fileData);
@@ -56,12 +56,9 @@ uploadPostToIPFS(
 );
 
 
-async function addComment(postId, commentText) {
+export async function addComment(postId, commentCid, currentAccount) {
     try {
         const { contractInstance } = await getcontractInstance();
-        const commentBuffer = Buffer.from(commentText);
-        const { cid } = await client.add(commentBuffer);
-        const commentCid = cid.toString();
         const transaction = contractInstance.methods.uploadPostComment(postId, commentCid);
         const data = transaction.encodeABI();
         const txObject = {
@@ -83,9 +80,10 @@ async function addComment(postId, commentText) {
     }
 }
 
-async function fetchCommentBodyFromIPFS(cid) {
+export async function fetchCommentBodyFromIPFS(cid) {
     try {
         const data = [];
+        const client = create("/ip4/127.0.0.1/tcp/5001");
         for await (const chunk of client.cat(cid)) {
             data.push(chunk);
         }
@@ -97,7 +95,7 @@ async function fetchCommentBodyFromIPFS(cid) {
     }
 }
 
-async function fetchCommentsFromBlockchainAndDecode(postId) {
+export async function fetchCommentsFromBlockchainAndDecode(postId) {
     try {
         const { contractInstance } = await getcontractInstance();
         const events = await contractInstance.getPastEvents('CommentAdded', {
@@ -117,7 +115,7 @@ async function fetchCommentsFromBlockchainAndDecode(postId) {
     }
 }
 
-async function fetchPostDetailsUsingEvents(postId) {
+export async function fetchPostDetailsUsingEvents(postId) {
     try {
 
         const { contractInstance } = await getcontractInstance();
@@ -126,6 +124,7 @@ async function fetchPostDetailsUsingEvents(postId) {
             fromBlock: 0,
             toBlock: 'latest',
         });
+        console.log("From fetchPostDetailsUsingEvents(): ");
 
         for (const event of events) {
             const { postCid } = event.returnValues;

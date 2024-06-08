@@ -38,7 +38,7 @@ export async function getPostForFeed(postId) {
 export async function viewPostInFeedTab(currentAccount) {
     const postCount = await callPostCount_block();
     var payment_flag;
-    for (let i = 0; i < postCount; i++) {
+    for (let i = 1; i < postCount; i++) {
         const post = await getPostForFeed(i);
         const postDiv = document.createElement("div");
         postDiv.classList.add("post");
