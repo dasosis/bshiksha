@@ -3,7 +3,6 @@ import path from 'path';
 import multer from 'multer';
 import cors from 'cors';
 import { create } from 'kubo-rpc-client';
-import cors from 'cors';
 
 const app = express();
 const port = 3000;
